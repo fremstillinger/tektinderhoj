@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+      <md-datepicker ng-model="startDate"  ng-change="startDateChanged()"  md-placeholder="Enter date"></md-datepicker>
+      
+
+
+      <md-datepicker ng-model="endDate" ng-change="endDateChanged()" md-placeholder="Enter date"></md-datepicker>
+
+
+	</div>
+	<div class="col-md-3">
+	</div>
+</div>
+
+<div class="row">
+
+<div class="col-md-12" ng-repeat="chart in charts">
+
+	<div style="height: 300px">
+		<canvas class="chart chart-line" chart-data="chart.data"
+chart-labels="chart.labels" chart-dataset-override="datasetOverrides" chart-series="chart.series" chart-colors="chart.colors" chart-options="chart.options">
+</canvas>
+
+	</div>
+</div>
