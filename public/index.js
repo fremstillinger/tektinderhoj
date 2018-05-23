@@ -140,9 +140,11 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 						self.labels.push(res.data.data[i].scale);
 						readingTypeName = res.data.data[i].readingTypeName;
 
+
 					}	
 					
-
+					self.series = [readingTypeName];
+					
 					self.options = {
 			maintainAspectRatio: false,
 			fill: false,

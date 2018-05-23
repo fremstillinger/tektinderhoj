@@ -23,7 +23,7 @@ module.exports = function(app, dbPool) {
 		
 		var groupBy = "readingDate";
 
-		if(daysSpan > 365*50){
+		if(daysSpan > 365*25){
 			//startDate = startDate
 			//startDate.setFullYear(startDate.getFullYear())
 			startDate = startDate.startOf('year');
@@ -32,8 +32,21 @@ module.exports = function(app, dbPool) {
 			endDate = endDate.endOf('year');
 			endDate.year(Math.ceil(endDate.year()/10)*10);
 
-			console.log(endDate);
-			groupBy = "ROUND(YEAR(readingDate)/10)*10";
+			console.log(startDate + " " + endDate);
+			groupBy = "CEIL(YEAR(readingDate)/5)*5";
+		
+
+		}else if(daysSpan > 365*50){
+			//startDate = startDate
+			//startDate.setFullYear(startDate.getFullYear())
+			startDate = startDate.startOf('year');
+			startDate.year(Math.floor(startDate.year()/10)*10);
+		
+			endDate = endDate.endOf('year');
+			endDate.year(Math.ceil(endDate.year()/10)*10);
+
+			console.log(startDate + " " + endDate);
+			groupBy = "CEIL(YEAR(readingDate)/5)*5";
 		
 
 		}else if(daysSpan > 365*5){
@@ -43,11 +56,11 @@ module.exports = function(app, dbPool) {
 			startDate.year(Math.floor(startDate.year()/10)*10);
 			console.log(startDate);
 			endDate = endDate.endOf('year');
-			groupBy = "ROUND(YEAR(readingDate))";
+			groupBy = "CEIL(YEAR(readingDate))";
 
 		}else if(daysSpan > 365){
 			groupBy = "CONCAT(MONTH(readingDate),'/',YEAR(readingDate))";
-		}else if(daysSpan > 10){
+		}else if(daysSpan > 30){
 			groupBy =  "CONCAT(DAY(readingDate),'/',MONTH(readingDate),'/',YEAR(readingDate))"; 
 		}
 
