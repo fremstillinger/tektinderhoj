@@ -2,13 +2,14 @@
   "name": "solaris",
   "version": "1.0.0",
   "description": "Sol og vind i Rødovre kommune",
-  "main": "app.js",
+  "main": "webapp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Martin Luckmann",
   "license": "ISC",
   "dependencies": {
+    "@serialport/parser-byte-length": "^1.0.5",
     "angular": "^1.6.10",
     "body-parser": "^1.18.3",
     "csv-parse": "^2.4.0",
@@ -16,6 +17,13 @@
     "moment": "^2.22.1",
     "prompt": "^1.0.0",
     "request": "^2.86.0",
+    "serialport": "^6.2.0",
     "xlsx": "^0.12.12"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://luckmann@bitbucket.org/luckmann/codenamesolaris.git"
+  },
+  "homepage": "https://bitbucket.org/luckmann/codenamesolaris#readme"
 }

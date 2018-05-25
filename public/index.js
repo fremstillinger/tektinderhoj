@@ -11,8 +11,6 @@ $mdDateLocaleProvider.parseDate = function(dateString) {
 };
 });
 
-
-
 app.config(function($routeProvider) {
 	$routeProvider
 
@@ -28,7 +26,6 @@ app.config(function($routeProvider) {
 
 
 app.controller('liveCtrl', function($scope,$routeParams) {
-	
 	$scope.test = "";
 });
 
@@ -114,13 +111,12 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			type: 'bar'
 		}];
 
-		this.series = ['Temperatur'];
+		this.series = [];
 
 		
 		this.data = [
 			[]
 		];
-
 
 		this.labels = [];
 
