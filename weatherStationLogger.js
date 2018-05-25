@@ -48,6 +48,9 @@ updateReadingTypes();
 // on data received from Davis USB logger
 
 port.on('data', function(data) {
+	if(data.length != 100){
+		return;
+	}
 	if(data.toString("hex", 0, 1) != "06"){
 		console.log("error in data :/ ", data.length, data)
 		
