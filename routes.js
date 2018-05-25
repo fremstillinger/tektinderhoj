@@ -50,7 +50,7 @@ module.exports = function(app, dbPool) {
 		startDate = startDate.startOf('day');
 		endDate = endDate.endOf('day');
 
-		var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i')";
+		var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i:%S')";
 
 		if(daysSpan > 365*50){
 			startDate = startDate.startOf('year');
