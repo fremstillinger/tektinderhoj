@@ -43,23 +43,21 @@ function requestReading() {
 }
 updateReadingTypes();
 
-
-
 // on data received from Davis USB logger
-
 port.on('data', function(data) {
-	if(data.length != 100){
-		return;
-	}
-	if(data.toString("hex", 0, 1) != "06"){
+	if (data.length != 100) {
 		console.log("error in data :/ ", data.length, data)
-		
 		return;
 	}
 
-	data = data.slice(1,99);
-	
-	console.log("reading:")
+	if (data.toString("hex", 0, 1) != "06") {
+		console.log("error in data :/ ", data.length, data)
+		return;
+	}
+
+	data = data.slice(1, 99);
+
+
 	for (var i = 0; i < readingTypes.length; i++) {
 		var hexCombined = "0x";
 		// read as little endian 
@@ -67,7 +65,6 @@ port.on('data', function(data) {
 			var hex = data.toString("hex", readingTypes[i].davisSerialPacketOffset + p - 1, readingTypes[i].davisSerialPacketOffset + p);
 			hexCombined += hex;
 		}
-
 		var value = parseInt(hexCombined);
 
 		switch (readingTypes[i].shortname) {
@@ -86,7 +83,7 @@ port.on('data', function(data) {
 			default:
 				break;
 		}
-		console.log(readingTypes[i].readingTypeName, value);
+		//console.log(readingTypes[i].readingTypeName, value);
 
 
 		var jsonData = {
