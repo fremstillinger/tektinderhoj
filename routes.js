@@ -106,7 +106,7 @@ module.exports = function(app, dbPool) {
 
 		
 
-		var readingDate = new Date(req.query.timeStamp);
+		var readingDate = new Date();
 		var value = req.query.lat + "," + req.query.lng;
 
 		var sourceID = req.query.id;
