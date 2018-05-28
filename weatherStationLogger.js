@@ -107,6 +107,9 @@ port.on('data', function(data) {
 				form: jsonData
 			},
 			function(err, httpResponse, body) {
+				if(err){
+					console.log(err);
+				}
 
 			});
 	}
