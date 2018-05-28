@@ -102,6 +102,40 @@ module.exports = function(app, dbPool) {
 		})
 	});
 
+	app.get("/api/set/reading/", (req, res) => {
+
+		
+
+		var readingDate = new Date(req.query.timeStamp);
+		var value = req.query.lat + "," + req.query.lng;
+
+		var sourceID = req.query.id;
+		var value = req.body.value;
+		var readingTypeID = "100";
+
+
+		dbPool.getConnection(function(err, db) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			console.log(req.body);
+			
+
+			
+			var readingDateMySql =  moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
+
+			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql,readingTypeID, sourceID, value], function(err) {
+				db.release();
+
+				if (!err) {
+					sendData(res, true, "reading created");
+				} else {
+					sendData(res, false, err);
+				}
+			})
+		});
+	})
 
 
 	/**
