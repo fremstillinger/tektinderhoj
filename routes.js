@@ -110,8 +110,6 @@ module.exports = function(app, dbPool) {
 		var value = req.query.lat + "," + req.query.lon;
 		console.log("insert",value);
 		var sourceID = 100;
-
-		var value = req.body.value;
 		var readingTypeID = "100";
 
 
