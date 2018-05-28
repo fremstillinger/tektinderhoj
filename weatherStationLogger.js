@@ -11,6 +11,7 @@ var port = new SerialPort(configData.weatherstationUSBadress, {
 	baudRate: 19200,
 	autoOpen: false
 });
+
 var readingTypes = [];
 
 
@@ -24,18 +25,25 @@ function updateReadingTypes() {
 			return;
 		}
 		readingTypes = JSON.parse(body).data;
+		openPort();
 
 
-		port.open(function(err) {
-			if (err) {
-				return console.log('Error opening port: ', err.message);
-			}
-			console.log("port open");
-			requestReading();
-			setInterval(requestReading, 2000);
-		});
 	});
 }
+
+
+
+function openPort() {
+	port.open(function(err) {
+		if (err) {
+			return console.log('Error opening port: ', err.message);
+		}
+		console.log("port open");
+		requestReading();
+		setInterval(requestReading, 2000);
+	});
+}
+
 
 
 function requestReading() {
@@ -45,6 +53,7 @@ updateReadingTypes();
 
 // on data received from Davis USB logger
 port.on('data', function(data) {
+	console.log(data);
 	if (data.length != 100) {
 		console.log("error in data :/ ", data.length, data)
 		return;
