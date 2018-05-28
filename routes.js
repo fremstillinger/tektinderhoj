@@ -107,7 +107,7 @@ module.exports = function(app, dbPool) {
 		
 
 		var readingDate = new Date();
-		var value = req.query.id + " " + req.query.lat + "," + req.query.lon;
+		var value = req.query.lat + "," + req.query.lon;
 		console.log("insert",value);
 		var sourceID = 100;
 
