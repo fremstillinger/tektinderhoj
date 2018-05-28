@@ -107,9 +107,10 @@ module.exports = function(app, dbPool) {
 		
 
 		var readingDate = new Date();
-		var value = req.query.id + " " + req.query.lat + "," + req.query.lng;
+		var value = req.query.id + " " + req.query.lat + "," + req.query.lon;
 
-		var sourceID = 100; ;
+		var sourceID = 100;
+
 		var value = req.body.value;
 		var readingTypeID = "100";
 
