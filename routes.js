@@ -85,7 +85,7 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 
-			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,AVG(readings.value) as value,sources.sourceName FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
+			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,AVG(readings.value) as value,readings.value as origValue,sources.sourceName FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
 			
 			db.query(query, [req.params.readingTypeShortName,startDate.toDate(),endDate.toDate()], function(err, rows, fields) {
 			
