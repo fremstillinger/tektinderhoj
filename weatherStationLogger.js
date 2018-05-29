@@ -54,11 +54,12 @@ function openPort() {
 		if (err) {
 			isPortOpen = false;
 			console.log(err);
-			console.log("Error opening port, trying to open in 5 sec...")
-			setTimeout(openPort,5000);
+			console.log("Error opening port, trying to open in 10 sec...")
+			setTimeout(openPort,10000);
 			return;
 		}
 		isPortOpen = true;
+		console.log("Port open :)")
 		requestReading();
 	});
 }
@@ -148,10 +149,8 @@ port.on('data', function(data) {
 			},
 			function(err, httpResponse, body) {
 				if(err){
-
 					console.log(err);
 					console.log("could not write readings :/ ")
-
 				}
 
 			});
