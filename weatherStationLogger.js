@@ -89,7 +89,6 @@ port.on('close', function(err) {
 
 // on data received from Davis USB logger
 port.on('data', function(data) {
-	console.log(data);
 	if (data.length != 100) {
 		console.log("error in data :/ ", data.length, data)
 		return;
