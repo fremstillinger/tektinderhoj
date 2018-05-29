@@ -92,12 +92,10 @@ port.on('close', function(err) {
 port.on('data', function(data) {
 	console.log("data received from Davis USB logger");
 	if (data.length != 100) {
-		console.log("error in data :/ ", data.length, data)
 		return;
 	}
 
 	if (data.toString("hex", 0, 1) != "06") {
-		console.log("error in data :/ ", data.length, data)
 		return;
 	}
 
