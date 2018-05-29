@@ -90,6 +90,7 @@ port.on('close', function(err) {
 
 // on data received from Davis USB logger
 port.on('data', function(data) {
+	console.log("data received from Davis USB logger");
 	if (data.length != 100) {
 		console.log("error in data :/ ", data.length, data)
 		return;
@@ -142,6 +143,7 @@ port.on('data', function(data) {
 			"sourceID": configData.weatherStationSourceID,
 			"value": value
 		};
+		console.log("write",jsonData);
 		var url = "http://" + configData.apiadress + ":" + configData.port + "/api/insert/reading/";
 		request.post({
 				url: url,
