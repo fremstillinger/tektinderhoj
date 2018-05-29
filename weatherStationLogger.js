@@ -143,8 +143,9 @@ port.on('data', function(data) {
 			"sourceID": configData.weatherStationSourceID,
 			"value": value
 		};
-		console.log("write",jsonData);
+		
 		var url = "http://" + configData.apiadress + ":" + configData.port + "/api/insert/reading/";
+		console.log("write",url,jsonData);
 		request.post({
 				url: url,
 				form: jsonData
