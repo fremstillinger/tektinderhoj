@@ -1,12 +1,14 @@
 const fs = require('fs');
 var request = require('request');
 
+var cron = require('cron');
+
 
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
+var isPortOpen = false;
 
 
 var SerialPort = require('serialport');
-
 var port = new SerialPort(configData.weatherstationUSBadress, {
 	baudRate: 19200,
 	autoOpen: false
@@ -14,42 +16,76 @@ var port = new SerialPort(configData.weatherstationUSBadress, {
 
 var readingTypes = [];
 
+// reload readingtypes every hour
+new cron.CronJob({
+  cronTime: '* 00 * * * *',
+  onTick: updateReadingTypes,
+  start: true
+});
 
-function updateReadingTypes() {
 
+function updateReadingTypes(callback) {
 	var url = "http://" + configData.apiadress + ":" + configData.port + "/api/get/readingTypes/";
 
 	request(url, function(error, response, body) {
 		if (error != null) {
 			console.log(error);
+			console.log("Could not load readingtypes :/ trying again in 5 sec...")
+
+			setTimeout(function(){
+				updateReadingTypes(callback)
+			},5000)
+			
 			return;
 		}
 		readingTypes = JSON.parse(body).data;
-		openPort();
-
-
+		if(callback != undefined){
+			callback();
+		}
 	});
 }
-
 
 
 function openPort() {
+	if(isPortOpen){
+		return;
+	}
 	port.open(function(err) {
 		if (err) {
-			return console.log('Error opening port: ', err.message);
+			isPortOpen = false;
+			console.log(err);
+			console.log("Error opening port, trying to open in 5 sec...")
+			setTimeout(openPort,5000);
+			return;
 		}
-		console.log("port open");
+		isPortOpen = true;
 		requestReading();
-		setInterval(requestReading, 2000);
 	});
 }
 
 
 
+setInterval(requestReading, configData.logInterval*1000);
+
 function requestReading() {
+	if(!isPortOpen){
+		console.log("port not open")
+		return;
+	}
 	port.write('LPS 0 1\n')
 }
-updateReadingTypes();
+
+updateReadingTypes(openPort);
+
+port.on('close', function(err) {
+	isPortOpen = false;
+	console.log("port closed, trying to open in 5 sec...")
+	setTimeout(openPort,5000);
+	openPort();
+});
+
+
+
 
 // on data received from Davis USB logger
 port.on('data', function(data) {
@@ -68,12 +104,21 @@ port.on('data', function(data) {
 
 
 	for (var i = 0; i < readingTypes.length; i++) {
+
 		var hexCombined = "0x";
+		// skip if packageoffset is not set
+		console.log(readingTypes[i].davisSerialPacketOffset);
+		
+		if(readingTypes[i].davisSerialPacketOffset == null){
+			continue;
+		}
+
 		// read as little endian 
 		for (var p = readingTypes[i].davisSerialPacketParameterSize; p > 0; p--) {
 			var hex = data.toString("hex", readingTypes[i].davisSerialPacketOffset + p - 1, readingTypes[i].davisSerialPacketOffset + p);
 			hexCombined += hex;
 		}
+
 		var value = parseInt(hexCombined);
 
 		switch (readingTypes[i].shortname) {
@@ -92,8 +137,6 @@ port.on('data', function(data) {
 			default:
 				break;
 		}
-		//console.log(readingTypes[i].readingTypeName, value);
-
 
 		var jsonData = {
 			"readingDate": new Date(),
@@ -108,7 +151,10 @@ port.on('data', function(data) {
 			},
 			function(err, httpResponse, body) {
 				if(err){
+
 					console.log(err);
+					console.log("could not write readings :/ ")
+
 				}
 
 			});

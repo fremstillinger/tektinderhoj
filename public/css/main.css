@@ -1,13 +1,13 @@
 body{
 	
-	background-color: rgb(255,255,255); 
-
+	background-color: rgb(255,255,200); 
 	background-image: url('/img/slogan.png');
 	background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: right bottom; 
     background-size: 100px 100px;
 }
+
 
 .nav-bar{
 	background-color: rgb(240, 243,218); 
