@@ -155,6 +155,9 @@ port.on('data', function(data) {
 					console.log(err);
 					console.log("could not write readings :/ ")
 				}
+				else{
+					console.log(body);
+				}
 
 			});
 	}
