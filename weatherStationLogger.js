@@ -106,9 +106,7 @@ port.on('data', function(data) {
 	for (var i = 0; i < readingTypes.length; i++) {
 
 		var hexCombined = "0x";
-		// skip if packageoffset is not set
-		console.log(readingTypes[i].davisSerialPacketOffset);
-		
+		// skip if packageoffset is not set		
 		if(readingTypes[i].davisSerialPacketOffset == null){
 			continue;
 		}
