@@ -30,7 +30,7 @@ app.controller('liveCtrl', function($scope,$routeParams) {
 
 
 app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$location', function($scope, $routeParams, $route, $http, $timeout,$location) {
-	
+
 
 	if ($routeParams.startDate != undefined) {
 		$scope.startDate = new Date($routeParams.startDate);
@@ -99,7 +99,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		this.labels = [];
 
 
-		$http.get('http://m80459.local:1972/api/get/readings/' + self.name, {
+		$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readings/' + self.name, {
 				params: {
 					startDate: $scope.startDate.toISOString(),
 					endDate: $scope.endDate.toISOString()
