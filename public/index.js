@@ -11,9 +11,9 @@ $mdDateLocaleProvider.parseDate = function(dateString) {
 };
 });
 
+
 app.config(function($routeProvider) {
 	$routeProvider
-
 		.when("/om", {
 			templateUrl: "about.html"
 		})
@@ -24,13 +24,12 @@ app.config(function($routeProvider) {
 });
 
 
-
 app.controller('liveCtrl', function($scope,$routeParams) {
 	$scope.test = "";
 });
 
 
-app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', function($scope, $routeParams, $route, $http, $timeout) {
+app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$location', function($scope, $routeParams, $route, $http, $timeout,$location) {
 	
 
 	if ($routeParams.startDate != undefined) {
@@ -38,7 +37,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 	else{
 		$scope.startDate = new Date();
-		$scope.startDate.setFullYear(1900);
+		$scope.startDate.setDate($scope.startDate.getDate() - 7);
+		//$scope.startDate.setFullYear(1900);
 	}
 	
 	if ($routeParams.endDate != undefined) {
@@ -48,32 +48,9 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$scope.endDate = new Date();
 	}
 	
-	/*
-	$scope.$watch('startDate',function(newVal,oldVal){
 
-	 	$route.updateParams({
-			"startDate": $scope.startDate.toISOString()
-		});
-	 	//alert(newVal + " " + oldVal);
-         //code goes here
-      },true);
-	
-
-
-	$scope.$watch('endDate',function(newVal,oldVal){
-		alert(oldVal + " ny " +  newVal);
-	 	$route.updateParams({
-			"endDate": $scope.endDate.toISOString()
-		});
-	 	//alert(newVal + " " + oldVal);
-         //code goes here
-      },false);
-      */
 
 	$scope.parametre = ['temp'];
-
-	//$route.updateParams({"test":"wuq"});
-
 
 	if ($routeParams.parametre != undefined) {
 		$scope.parametre = $routeParams.parametre.split(",");
@@ -90,6 +67,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			"endDate": $scope.endDate.toISOString()
 		});
 	}
+	$scope.embedCode = "<iframe src='" +  $location.absUrl() + "'></iframe>";
 
 	$scope.charts = [];
 
@@ -121,7 +99,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		this.labels = [];
 
 
-		$http.get('http://fremstillinger.dk:1972/api/get/readings/' + self.name, {
+		$http.get('http://m80459.local:1972/api/get/readings/' + self.name, {
 				params: {
 					startDate: $scope.startDate.toISOString(),
 					endDate: $scope.endDate.toISOString()
@@ -165,7 +143,6 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 
 				}, 0);
-				//$scope.$apply(); 
 
 			});
 
