@@ -67,9 +67,37 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			"endDate": $scope.endDate.toISOString()
 		});
 	}
+
+	$scope.parameterSelected = function(readingTypeName){
+		var val = $scope.parametre.indexOf(readingTypeName);
+		return val != -1;
+	}
+
+	$scope.toogleParameter = function(readingTypeName){
+		var indexOfParam = $scope.parametre.indexOf(readingTypeName);
+		if(indexOfParam != -1){
+			$scope.parametre.splice(indexOfParam,1)
+		}
+		else{
+			$scope.parametre.push(readingTypeName)
+		}
+		console.log($scope.parametre);
+
+		$route.updateParams({
+			"parametre": $scope.parametre.join(",")
+		});
+
+	}
+
+
 	$scope.embedCode = "<iframe src='" +  $location.absUrl() + "'></iframe>";
 
 	$scope.charts = [];
+	$scope.readingTypes = [];
+
+	$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readingTypes/').then(function(res){
+			$scope.readingTypes = res.data.data;
+	});
 
 	$scope.chartController = function(name) {
 		var self = this;
@@ -97,6 +125,11 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		];
 
 		this.labels = [];
+
+
+		
+
+
 
 
 		$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readings/' + self.name, {

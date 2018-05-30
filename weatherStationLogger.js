@@ -85,9 +85,6 @@ port.on('close', function(err) {
 	openPort();
 });
 
-
-
-
 // on data received from Davis USB logger
 port.on('data', function(data) {
 	console.log("data received from Davis USB logger");

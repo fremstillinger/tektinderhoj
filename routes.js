@@ -44,9 +44,7 @@ module.exports = function(app, dbPool) {
 	app.get('/api/get/readings/:readingTypeShortName', (req, res) => {
 		var startDate = moment(new Date(req.query.startDate));
 		var endDate = moment(new Date(req.query.endDate));
-
 		var daysSpan = (endDate-startDate)/1000/60/60/24;
-		
 		startDate = startDate.startOf('day');
 		endDate = endDate.endOf('day');
 
@@ -86,7 +84,7 @@ module.exports = function(app, dbPool) {
 			}
 
 			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
-			
+
 			db.query(query, [req.params.readingTypeShortName,startDate.toDate(),endDate.toDate()], function(err, rows, fields) {
 			
 				db.release();

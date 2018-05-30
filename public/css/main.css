@@ -1,6 +1,6 @@
-body{
+html,body{
 	
-	background-color: rgb(255,255,200); 
+	background-color: rgb(255,255,255); 
 	background-image: url('/img/slogan.png');
 	background-repeat: no-repeat;
     background-attachment: fixed;
@@ -15,4 +15,8 @@ body{
 
 .chart{
 	margin-top:20px;
+}
+
+.embed{
+	font-size: 10px;
 }
