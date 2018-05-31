@@ -1,8 +1,89 @@
 var moment = require('moment');
+const fs = require('fs');
+var Excel = require('exceljs');
+var request = require('request');
+const url = require('url');
+
+var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 
 
 
 module.exports = function(app, dbPool) {
+
+
+	/* download excelfile */
+
+	app.get("/api/download/TekTinderhoejDataSet.xlsx", (req, res) => {
+		var params = req.query.parameters.split(",")
+		console.log("download ", params, req.query.startDate, req.query.endDate);
+
+		var workbook = new Excel.Workbook();
+		workbook.creator = 'TEK Tinderhøj';
+		workbook.created = new Date();
+		workbook.modified = new Date();
+
+		var numDownloaded = 0;
+
+		downloadNextParameter();
+
+		function downloadNextParameter() {
+			if (numDownloaded == params.length) {
+				if (numDownloaded == params.length) {
+					workbook.xlsx.write(res)
+						.then(function() {
+							// done
+						});
+				}
+
+			} else {
+
+				var url = 'http://' + configData.apiadress + ':' + configData.port + '/api/get/readings/' + params[numDownloaded];
+
+				request({
+					url: url,
+					qs: {
+						startDate: req.query.startDate,
+						endDate: req.query.endDate
+					},
+					json: true
+				}, function(error, response, body) {
+					if (error) {
+						res.send(error);
+						return;
+					} else {
+
+
+						console.log("param", params[numDownloaded]);
+						var ws = workbook.addWorksheet(params[numDownloaded]);
+						ws.columns = [{
+							header: 'Tidspunkt',
+							key: 'scale',
+							width: 10
+						},{
+							header: 'Værdi',
+							key: 'value',
+							width: 10,
+							outlineLevel: 1
+						}];
+
+
+						console.log(body.data.rows);
+						ws.addRows(body.data.rows);
+						numDownloaded += 1;
+						downloadNextParameter();
+
+
+					}
+				});
+
+			}
+
+		}
+
+
+
+	});
+
 
 	/**
 	 * Get latest readings
@@ -39,26 +120,24 @@ module.exports = function(app, dbPool) {
 	})
 
 
-	
-
 
 	/**
 	 * Get readings by type / timespan
 	 */
 
 	app.get('/api/get/readings/:readingTypeShortName', (req, res) => {
-		
+
 		var startDate = moment(new Date());
-		if(req.query.startDate != undefined){
+		if (req.query.startDate != undefined) {
 			startDate = moment(new Date(req.query.startDate));
-		
+
 		}
 		var endDate = moment(new Date());
 
-		if(req.query.endDate != undefined){
+		if (req.query.endDate != undefined) {
 			endDate = moment(new Date(req.query.endDate));
 		}
-		console.log(startDate,endDate);
+		console.log(startDate, endDate);
 
 		var daysSpan = (endDate - startDate) / 1000 / 60 / 60 / 24;
 		startDate = startDate.startOf('day');
@@ -94,8 +173,7 @@ module.exports = function(app, dbPool) {
 			groupBy = "CONCAT(MONTH(readingDate),'-',YEAR(readingDate))";
 		} else if (daysSpan > 30) {
 			groupBy = "CONCAT(DAY(readingDate),'-',MONTH(readingDate),'-',YEAR(readingDate))";
-		}
-		else if (daysSpan > 1) {
+		} else if (daysSpan > 1) {
 			groupBy = "CONCAT(day(readingDate),'-',month(readingDate),'-',year(readingDate),' ',HOUR( readingDate ),':00')";
 		}
 

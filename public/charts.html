@@ -4,11 +4,18 @@
 		<center><p>Vælg tidsperiode</p></center>
 		<div class="row">
 			<div class="col-md-6">
-
-     <md-datepicker ng-model="startDate"  ng-change="startDateChanged()"  md-placeholder="Enter date"></md-datepicker> 
+				<center>
+<small><p>Fra</p></small>
+     <md-datepicker ng-model="startDate"  ng-change="startDateChanged()"  md-placeholder="Enter date"></md-datepicker>
+     </center> 
      </div>
+    
      <div class="col-md-6">
+     	 	<center>
+<small><p>Til</p></small>
       <md-datepicker ng-model="endDate" ng-change="endDateChanged()" md-placeholder="Enter date"></md-datepicker>
+      </center> 
+      
   </div>
       </div>
   </p>
@@ -17,7 +24,7 @@
 
 			<div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Parametre
+    Vælg parametre
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
