@@ -24,13 +24,8 @@
   		<div class="checkbox dropdown-item" ng-repeat="readingType in readingTypes">
 			<label><input type="checkbox" ng-click="toogleParameter(readingType.shortname)" ng-model-options="{ getterSetter: true }" ng-model="parameterSelected(readingType.shortname)" > {{readingType.readingTypeName}}</label>
 		</div>
-
   </div>
 </div>
-
-
-			
-
 	</div>
 </div>
 
@@ -44,8 +39,6 @@
 		<canvas class="chart chart-line" chart-data="chart.data"
 chart-labels="chart.labels" chart-dataset-override="datasetOverrides" chart-series="chart.series" chart-colors="chart.colors" chart-options="chart.options">
 </canvas>
-
-
 	</div>
 </div>
 </div>
@@ -53,12 +46,9 @@ chart-labels="chart.labels" chart-dataset-override="datasetOverrides" chart-seri
 <div class="row">
 	<div class="col-md-12">
 		<center>
-		  <button type="button" class="btn btn-secondary">Download data som excelark</button>
+		  <button type="button" ng-click="downloadExcelfile()" class="btn btn-secondary" >Download data som excelark</button>
 		</center>
-	</div>
-
-	
-
+	</div>	
 </div>
 
 <div class="row">

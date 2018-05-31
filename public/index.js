@@ -1,14 +1,14 @@
 var app = angular.module("solaris", ["ngRoute", 'ngMessages', 'ngMaterial', "chart.js"]);
 
 app.config(function($mdDateLocaleProvider) {
-   $mdDateLocaleProvider.formatDate = function(date) {
-    return moment(date).format('DD/MM/YYYY');
-};
+	$mdDateLocaleProvider.formatDate = function(date) {
+		return moment(date).format('DD/MM/YYYY');
+	};
 
-$mdDateLocaleProvider.parseDate = function(dateString) {
-    var m = moment(dateString, 'DD/MM/YYYY', true);
-    return m.isValid() ? m.toDate() : new Date(NaN);
-};
+	$mdDateLocaleProvider.parseDate = function(dateString) {
+		var m = moment(dateString, 'DD/MM/YYYY', true);
+		return m.isValid() ? m.toDate() : new Date(NaN);
+	};
 });
 
 
@@ -24,30 +24,28 @@ app.config(function($routeProvider) {
 });
 
 
-app.controller('liveCtrl', function($scope,$routeParams) {
+app.controller('liveCtrl', function($scope, $routeParams) {
 	$scope.test = "";
 });
 
 
-app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$location', function($scope, $routeParams, $route, $http, $timeout,$location) {
+app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', function($scope, $routeParams, $route, $http, $timeout, $location, $window) {
 
 
 	if ($routeParams.startDate != undefined) {
 		$scope.startDate = new Date($routeParams.startDate);
-	}
-	else{
+	} else {
 		$scope.startDate = new Date();
 		$scope.startDate.setDate($scope.startDate.getDate() - 7);
 		//$scope.startDate.setFullYear(1900);
 	}
-	
+
 	if ($routeParams.endDate != undefined) {
 		$scope.endDate = new Date($routeParams.endDate);
-	}
-	else{
+	} else {
 		$scope.endDate = new Date();
 	}
-	
+
 
 
 	$scope.parametre = ['temp'];
@@ -60,7 +58,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$route.updateParams({
 			"startDate": $scope.startDate.toISOString()
 		});
-		
+
 	}
 	$scope.endDateChanged = function() {
 		$route.updateParams({
@@ -68,17 +66,16 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		});
 	}
 
-	$scope.parameterSelected = function(readingTypeName){
+	$scope.parameterSelected = function(readingTypeName) {
 		var val = $scope.parametre.indexOf(readingTypeName);
 		return val != -1;
 	}
 
-	$scope.toogleParameter = function(readingTypeName){
+	$scope.toogleParameter = function(readingTypeName) {
 		var indexOfParam = $scope.parametre.indexOf(readingTypeName);
-		if(indexOfParam != -1){
-			$scope.parametre.splice(indexOfParam,1)
-		}
-		else{
+		if (indexOfParam != -1) {
+			$scope.parametre.splice(indexOfParam, 1)
+		} else {
 			$scope.parametre.push(readingTypeName)
 		}
 		console.log($scope.parametre);
@@ -90,14 +87,27 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 
-	$scope.embedCode = "<iframe src='" +  $location.absUrl() + "'></iframe>";
+	$scope.embedCode = "<iframe src='" + $location.absUrl() + "'></iframe>";
 
 	$scope.charts = [];
 	$scope.readingTypes = [];
 
-	$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readingTypes/').then(function(res){
-			$scope.readingTypes = res.data.data;
+	$scope.downloadExcelfile = function() {
+
+		var p = $.param({
+			parameters: $scope.parametre.join(","),
+			startDate: $scope.startDate.toISOString(),
+			endDate: $scope.endDate.toISOString()
+		});
+
+		var url = 'http://' + configData.apiAdress + ':' + configData.port + '/api/download/TekTinderhoejDataSet.xlsx?' + p;
+		$window.open(url, '_blank');
+	}
+
+	$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readingTypes/').then(function(res) {
+		$scope.readingTypes = res.data.data;
 	});
+
 
 	$scope.chartController = function(name) {
 		var self = this;
@@ -119,16 +129,12 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 		this.series = [];
 
-		
+
 		this.data = [
 			[]
 		];
 
 		this.labels = [];
-
-
-		
-
 
 
 
@@ -141,38 +147,36 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			.then(function(res) {
 				$timeout(function() {
 					var readingTypeName = "";
-					for (var i = 0; i < res.data.data.length; i++) {
+					for (var i = 0; i < res.data.data.rows.length; i++) {
 						//var d = new Date(res.data.data[i].readingDate);
-						self.data[0].push(res.data.data[i].value);
-						self.labels.push(res.data.data[i].scale);
-						readingTypeName = res.data.data[i].readingTypeName;
+						self.data[0].push(res.data.data.rows[i].value);
+						self.labels.push(res.data.data.rows[i].scale);
+						readingTypeName = res.data.data.rows[i].readingTypeName;
+					}
 
-
-					}	
-					
 					self.series = [readingTypeName];
-					
-					self.options = {
-			maintainAspectRatio: false,
-			fill: false,
-			scales: {
-				xAxes: [{
-					display: true,
-					scaleLabel: {
-						display: false,
-						labelString: 'Dato'
-					}
-				}],
-				yAxes: [{
-					display: true,
-					scaleLabel: {
-						display: true,
-						labelString: readingTypeName
-					}
-				}]
-			}
 
-		}
+					self.options = {
+						maintainAspectRatio: false,
+						fill: false,
+						scales: {
+							xAxes: [{
+								display: true,
+								scaleLabel: {
+									display: false,
+									labelString: 'Dato'
+								}
+							}],
+							yAxes: [{
+								display: true,
+								scaleLabel: {
+									display: true,
+									labelString: readingTypeName
+								}
+							}]
+						}
+
+					}
 
 
 				}, 0);

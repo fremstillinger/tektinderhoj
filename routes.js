@@ -1,18 +1,20 @@
 var moment = require('moment');
 
+
+
 module.exports = function(app, dbPool) {
 
 	/**
 	 * Get latest readings
 	 */
 
-	 app.get('/api/get/readings/live', (req, res) => {
+	app.get('/api/get/readings/live', (req, res) => {
 
 
-	 })
+	})
 
 
-	 /**
+	/**
 	 * get reading types
 	 */
 
@@ -23,8 +25,8 @@ module.exports = function(app, dbPool) {
 				console.log(err);
 				return;
 			}
-			
-			db.query("SELECT * FROM readingTypes", function(err,rows) {
+
+			db.query("SELECT * FROM readingTypes", function(err, rows) {
 				db.release();
 
 				if (!err) {
@@ -37,44 +39,61 @@ module.exports = function(app, dbPool) {
 	})
 
 
-	 /**
+	
+
+
+	/**
 	 * Get readings by type / timespan
 	 */
 
 	app.get('/api/get/readings/:readingTypeShortName', (req, res) => {
-		var startDate = moment(new Date(req.query.startDate));
-		var endDate = moment(new Date(req.query.endDate));
-		var daysSpan = (endDate-startDate)/1000/60/60/24;
+		
+		var startDate = moment(new Date());
+		if(req.query.startDate != undefined){
+			startDate = moment(new Date(req.query.startDate));
+		
+		}
+		var endDate = moment(new Date());
+
+		if(req.query.endDate != undefined){
+			endDate = moment(new Date(req.query.endDate));
+		}
+		console.log(startDate,endDate);
+
+		var daysSpan = (endDate - startDate) / 1000 / 60 / 60 / 24;
 		startDate = startDate.startOf('day');
 		endDate = endDate.endOf('day');
 
 		//var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i:%S')";
-		var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i')";
+		//var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i')";
+		//var groupBy = 'Round(date_format(readingDate, "%i") / (15*60))';
 
-		if(daysSpan > 365*50){
+		var groupBy = "CONCAT(year(readingDate),'-',month(readingDate),'-',day(readingDate),' ',HOUR( readingDate ),':',LPAD(FLOOR(MINUTE( readingDate ) / 15 )*15,2,'0'))";
+
+		if (daysSpan > 365 * 50) {
 			startDate = startDate.startOf('year');
-			startDate.year(Math.floor(startDate.year()/10)*10);
+			startDate.year(Math.floor(startDate.year() / 10) * 10);
 			endDate = endDate.endOf('year');
-			endDate.year(Math.ceil(endDate.year()/10)*10);
+			endDate.year(Math.ceil(endDate.year() / 10) * 10);
 			groupBy = "CEIL(YEAR(readingDate)/10)*10";
-		}else if(daysSpan > 365*25){
+		} else if (daysSpan > 365 * 25) {
 			startDate = startDate.startOf('year');
-			startDate.year(Math.floor(startDate.year()/10)*10);
+			startDate.year(Math.floor(startDate.year() / 10) * 10);
 			endDate = endDate.endOf('year');
-			endDate.year(Math.ceil(endDate.year()/10)*10);
+			endDate.year(Math.ceil(endDate.year() / 10) * 10);
 			groupBy = "CEIL(YEAR(readingDate)/5)*5";
-		}else if(daysSpan > 365*5){
+		} else if (daysSpan > 365 * 5) {
 			//startDate = startDate
 			//startDate.setFullYear(startDate.getFullYear())
 			startDate = startDate.startOf('year');
-			startDate.year(Math.floor(startDate.year()/10)*10);
+			startDate.year(Math.floor(startDate.year() / 10) * 10);
 			endDate = endDate.endOf('year');
 			groupBy = "CEIL(YEAR(readingDate))";
 
-		}else if(daysSpan > 365){
+		} else if (daysSpan > 365) {
 			groupBy = "CONCAT(MONTH(readingDate),'/',YEAR(readingDate))";
-		}else if(daysSpan > 30){
-			groupBy =  "CONCAT(DAY(readingDate),'/',MONTH(readingDate),'/',YEAR(readingDate))"; 
+		} else if (daysSpan > 30) {
+			groupBy = "CONCAT(DAY(readingDate),'/',MONTH(readingDate),'/',YEAR(readingDate))";
 		}
 
 		dbPool.getConnection(function(err, db) {
@@ -85,15 +104,19 @@ module.exports = function(app, dbPool) {
 
 			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
 
-			db.query(query, [req.params.readingTypeShortName,startDate.toDate(),endDate.toDate()], function(err, rows, fields) {
-			
+			db.query(query, [req.params.readingTypeShortName, startDate.toDate(), endDate.toDate()], function(err, rows, fields) {
+
 				db.release();
 				if (err) {
 					sendData(res, 0, err);
 
 
 				} else {
-					sendData(res, true, rows);
+					var obj = {
+						fields: fields,
+						rows: rows
+					}
+					sendData(res, true, obj);
 
 				}
 			});
@@ -102,11 +125,11 @@ module.exports = function(app, dbPool) {
 
 	app.get("/api/set/reading/", (req, res) => {
 
-		
+
 
 		var readingDate = new Date();
 		var value = req.query.lat + "," + req.query.lon;
-		console.log("insert",value);
+		console.log("insert", value);
 		var sourceID = 100;
 		var readingTypeID = "100";
 
@@ -117,12 +140,12 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 			console.log(req.body);
-			
 
-			
-			var readingDateMySql =  moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
 
-			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql,readingTypeID, sourceID, value], function(err) {
+
+			var readingDateMySql = moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
+
+			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql, readingTypeID, sourceID, value], function(err) {
 				db.release();
 
 				if (!err) {
@@ -147,15 +170,15 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 			console.log(req.body);
-			
+
 
 			var readingDate = new Date(req.body.readingDate);
 			var readingTypeID = req.body.readingTypeID;
 			var sourceID = req.body.sourceID;
 			var value = req.body.value;
-			var readingDateMySql =  moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
+			var readingDateMySql = moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
 
-			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql,readingTypeID, sourceID, value], function(err) {
+			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql, readingTypeID, sourceID, value], function(err) {
 				db.release();
 
 				if (!err) {
