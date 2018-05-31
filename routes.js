@@ -62,11 +62,15 @@ module.exports = function(app, dbPool) {
 						},{
 							header: 'Værdi',
 							key: 'value',
-							width: 10,
+							width: 30,
 							outlineLevel: 1
 						}];
 
 
+					
+						if(body.data.rows.length > 0){
+							ws.columns[1].header = body.data.rows[0].readingTypeName;
+						}
 						console.log(body.data.rows);
 						ws.addRows(body.data.rows);
 						numDownloaded += 1;
