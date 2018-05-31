@@ -58,7 +58,7 @@ module.exports = function(app, dbPool) {
 						ws.columns = [{
 							header: 'Tidspunkt',
 							key: 'scale',
-							width: 10
+							width: 30
 						},{
 							header: 'Værdi',
 							key: 'value',
