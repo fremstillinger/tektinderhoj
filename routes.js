@@ -147,7 +147,7 @@ module.exports = function(app, dbPool) {
 		//var groupBy = "DATE_FORMAT(readingDate, '%Y-%m-%d %H:%i')";
 		//var groupBy = 'Round(date_format(readingDate, "%i") / (15*60))';
 
-		var groupBy = "CONCAT(day(readingDate),'-',month(readingDate),'-',year(readingDate),' ',HOUR( readingDate ),':',LPAD(FLOOR(MINUTE( readingDate ) / 15 )*15,2,'0'))";
+		var groupBy = "CONCAT(day(readingDate),'-',month(readingDate),'-',year(readingDate),' ',LPAD(HOUR( readingDate ),2,0)':',LPAD(FLOOR(MINUTE( readingDate ) / 15 )*15,2,'0'))";
 
 		if (daysSpan > 365 * 50) {
 			startDate = startDate.startOf('year');
@@ -174,7 +174,7 @@ module.exports = function(app, dbPool) {
 		} else if (daysSpan > 30) {
 			groupBy = "CONCAT(DAY(readingDate),'-',MONTH(readingDate),'-',YEAR(readingDate))";
 		} else if (daysSpan > 1) {
-			groupBy = "CONCAT(day(readingDate),'-',month(readingDate),'-',year(readingDate),' ',HOUR( readingDate ),':00')";
+			groupBy = "CONCAT(day(readingDate),'-',month(readingDate),'-',year(readingDate),' ',LPAD(HOUR( readingDate ),2,0),':00')";
 		}
 
 		dbPool.getConnection(function(err, db) {
