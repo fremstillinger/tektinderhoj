@@ -185,7 +185,7 @@ var isWebsocketOpen = false;
 function openWecsocket() {
 	var wsPath = 'ws://' + configData.apiadress + ':' + configData.websocketPort;
 	try{
-	ws = new WebSocket();
+	ws = new WebSocket(wsPath);
 	}
 	catch(e){
 		console.log(e,wsPath);
