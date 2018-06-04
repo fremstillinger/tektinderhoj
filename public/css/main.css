@@ -20,3 +20,14 @@ html,body{
 .embed{
 	font-size: 10px;
 }
+
+.unit .u,.unit .u{
+	display: inline;
+    vertical-align: top;
+}
+
+.liveData{
+	padding: 20px;
+	background-color: #a1c436;
+	color:#306a45;
+}

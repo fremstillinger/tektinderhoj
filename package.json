@@ -20,6 +20,7 @@
     "prompt": "^1.0.0",
     "request": "^2.86.0",
     "serialport": "^6.2.0",
+    "ws": "^5.2.0",
     "xlsx": "^0.12.12"
   },
   "devDependencies": {},

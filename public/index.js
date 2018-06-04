@@ -23,15 +23,8 @@ app.config(function($routeProvider) {
 		})
 });
 
-
-app.controller('liveCtrl', function($scope, $routeParams) {
-	$scope.test = "";
-});
-
-
 app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', function($scope, $routeParams, $route, $http, $timeout, $location, $window) {
-
-
+	
 	if ($routeParams.startDate != undefined) {
 		$scope.startDate = new Date($routeParams.startDate);
 	} else {
@@ -47,6 +40,45 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 
+	$scope.liveData = [];
+	$scope.livedataConnected = false;
+
+
+	$scope.getLivedataByShortname = function(sn){
+		for(var i=0; i<$scope.liveData.length; i++){
+			var ld = $scope.liveData[i];
+			if(ld.shortname == sn){
+				return ld;
+			}
+		}
+		return {readingTypeName:sn,value:"--",unit:"--"};
+	}
+
+
+	$scope.openWebsocket = function() {
+
+		var connection = new WebSocket('ws://' + configData.apiAdress +":" + configData.websocketPort);
+		// When the connection is open, send some data to the server
+		connection.onopen = function() {
+			$scope.livedataConnected = true;
+		};
+
+		// Log errors
+		connection.onerror = function(error) {
+			console.log('WebSocket Error ' + error);
+		};
+
+		// Log messages from the server
+		connection.onmessage = function(e) {
+			$timeout(function() {
+			$scope.liveData = JSON.parse(e.data);
+		},0);
+			//$scope.$apply();	
+		};
+	}
+
+	$scope.test = $routeParams;
+	$scope.openWebsocket();
 
 	$scope.parametre = ['temp'];
 
@@ -72,22 +104,26 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 	$scope.toogleParameter = function(readingTypeName) {
+		console.log("toogleParameter",readingTypeName);
+		
 		var indexOfParam = $scope.parametre.indexOf(readingTypeName);
+
 		if (indexOfParam != -1) {
 			$scope.parametre.splice(indexOfParam, 1)
 		} else {
 			$scope.parametre.push(readingTypeName)
 		}
-		console.log($scope.parametre);
+		
 
 		$route.updateParams({
 			"parametre": $scope.parametre.join(",")
 		});
+		
 
 	}
 
 
-	$scope.embedCode = "<iframe src='" + $location.absUrl() + "'></iframe>";
+	$scope.embedCode = "<iframe src='" + $location.absUrl() + "&embedMode" + "'></iframe>";
 
 	$scope.charts = [];
 	$scope.readingTypes = [];
@@ -104,8 +140,15 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$window.open(url, '_blank');
 	}
 
+
 	$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readingTypes/').then(function(res) {
-		$scope.readingTypes = res.data.data;
+		//$scope.readingTypes = ;
+		for(var i=0; i<res.data.data.length; i++){
+			var obj = res.data.data[i];
+			obj.selected = $scope.parametre.indexOf(obj.shortname) != -1;
+		
+			$scope.readingTypes.push(obj)
+		}
 	});
 
 
@@ -137,7 +180,6 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		this.labels = [];
 
 
-
 		$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readings/' + self.name, {
 				params: {
 					startDate: $scope.startDate.toISOString(),
@@ -151,7 +193,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 						//var d = new Date(res.data.data[i].readingDate);
 						self.data[0].push(res.data.data.rows[i].value);
 						self.labels.push(res.data.data.rows[i].scale);
-						readingTypeName = res.data.data.rows[i].readingTypeName;
+						readingTypeName = res.data.data.rows[i].readingTypeName + " " +  res.data.data.rows[i].unit ;
 					}
 
 					self.series = [readingTypeName];
@@ -177,8 +219,6 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 						}
 
 					}
-
-
 				}, 0);
 
 			});

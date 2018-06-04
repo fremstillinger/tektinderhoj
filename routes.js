@@ -6,10 +6,7 @@ const url = require('url');
 
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 
-
-
 module.exports = function(app, dbPool) {
-
 
 	/* download excelfile */
 
@@ -36,9 +33,7 @@ module.exports = function(app, dbPool) {
 				}
 
 			} else {
-
 				var url = 'http://' + configData.apiadress + ':' + configData.port + '/api/get/readings/' + params[numDownloaded];
-
 				request({
 					url: url,
 					qs: {
@@ -51,9 +46,6 @@ module.exports = function(app, dbPool) {
 						res.send(error);
 						return;
 					} else {
-
-
-						console.log("param", params[numDownloaded]);
 						var ws = workbook.addWorksheet(params[numDownloaded]);
 						ws.columns = [{
 							header: 'Tidspunkt',
@@ -73,8 +65,6 @@ module.exports = function(app, dbPool) {
 						ws.addRows(body.data.rows);
 						numDownloaded += 1;
 						downloadNextParameter();
-
-
 					}
 				});
 
@@ -185,7 +175,7 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 
-			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
+			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName,readingTypes.unit FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
 
 			db.query(query, [req.params.readingTypeShortName, startDate.toDate(), endDate.toDate()], function(err, rows, fields) {
 
@@ -206,39 +196,40 @@ module.exports = function(app, dbPool) {
 		})
 	});
 
-	app.get("/api/set/reading/", (req, res) => {
 
 
+	/**
+	 * Get latest reading by shortname
+	 */
 
-		var readingDate = new Date();
-		var value = req.query.lat + "," + req.query.lon;
-		console.log("insert", value);
-		var sourceID = 100;
-		var readingTypeID = "100";
-
+	app.get('/api/get/latestReading/:readingTypeShortName', (req, res) => {
 
 		dbPool.getConnection(function(err, db) {
 			if (err) {
 				console.log(err);
 				return;
 			}
-			console.log(req.body);
 
+			var query = 'SELECT readings.readingDate,readingTypes.readingTypeName,readingTypes.shortname,readings.value,sources.sourceName,readingTypes.unit  FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? ORDER BY readingDate DESC  LIMIT 0,1';
 
+			db.query(query, [req.params.readingTypeShortName], function(err, rows, fields) {
 
-			var readingDateMySql = moment(readingDate).format('YYYY-MM-DD HH:mm:ss');
-
-			db.query("INSERT INTO readings (readingDate,readingTypeID,sourceID,value) VALUES (?,?,?,?)", [readingDateMySql, readingTypeID, sourceID, value], function(err) {
 				db.release();
+				if (err) {
+					sendData(res, 0, err);
 
-				if (!err) {
-					sendData(res, true, "reading created");
+
 				} else {
-					sendData(res, false, err);
+					var obj = {
+						fields: fields,
+						rows: rows
+					}
+					sendData(res, true, obj);
+
 				}
-			})
-		});
-	})
+			});
+		})
+	});
 
 
 	/**

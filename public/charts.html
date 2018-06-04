@@ -1,42 +1,64 @@
 <div class="row">
+	<div class="col-md-9"></div>
+	<div class="col-md-3">
+			<center>
+			<div class="dropdown">
+				
+  <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Vælg parametre
+  </button>
+
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+  		<div class="checkbox dropdown-item" ng-repeat="readingType in readingTypes">
+			<label><input type="checkbox" ng-click="toogleParameter(readingType.shortname)" ng-model="readingType.selected" > {{readingType.readingTypeName}}</label>
+		</div>
+  </div>
+</div>
+</center>
+	</div>
+</div>
+
+<div class="row liveData">
+	 <div class="col-md-12 center-block">
+	 	<div class="row">
+
+		<div class="col-md-3 unit"   ng-repeat="param in parametre"">
+	
+		<p ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).readingTypeName"></p>
+		<h2 class="u" ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).value"></h2><p  ng-model-options="{ getterSetter: true }" class="u" ng-bind="getLivedataByShortname(param).unit"></p>
+</div>
+	</div>
+	
+</div>
+	</div>
+
+
+<div class="row">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
 		<center><p>Vælg tidsperiode</p></center>
 		<div class="row">
 			<div class="col-md-6">
 				<center>
-<small><p>Fra</p></small>
+<p><small>Fra</small>
      <md-datepicker ng-model="startDate"  ng-change="startDateChanged()"  md-placeholder="Enter date"></md-datepicker>
+    	</p>
      </center> 
      </div>
     
      <div class="col-md-6">
      	 	<center>
-<small><p>Til</p></small>
+<p><small>Til</small>
       <md-datepicker ng-model="endDate" ng-change="endDateChanged()" md-placeholder="Enter date"></md-datepicker>
+      </p>
       </center> 
       
   </div>
       </div>
   </p>
 </div>
-		<div class="col-md-3">
-
-			<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Vælg parametre
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-  		<div class="checkbox dropdown-item" ng-repeat="readingType in readingTypes">
-			<label><input type="checkbox" ng-click="toogleParameter(readingType.shortname)" ng-model-options="{ getterSetter: true }" ng-model="parameterSelected(readingType.shortname)" > {{readingType.readingTypeName}}</label>
-		</div>
-  </div>
+		
 </div>
-	</div>
-</div>
-
-
 
 <div class="row">
 

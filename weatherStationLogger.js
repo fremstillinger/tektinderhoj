@@ -1,6 +1,6 @@
 const fs = require('fs');
 var request = require('request');
-
+const WebSocket = require('ws');
 var cron = require('cron');
 
 
@@ -18,9 +18,9 @@ var readingTypes = [];
 
 // reload readingtypes every hour
 new cron.CronJob({
-  cronTime: '* 00 * * * *',
-  onTick: updateReadingTypes,
-  start: true
+	cronTime: '* 00 * * * *',
+	onTick: updateReadingTypes,
+	start: true
 });
 
 
@@ -32,14 +32,14 @@ function updateReadingTypes(callback) {
 			console.log(error);
 			console.log("Could not load readingtypes :/ trying again in 5 sec...")
 
-			setTimeout(function(){
+			setTimeout(function() {
 				updateReadingTypes(callback)
-			},5000)
-			
+			}, 5000);
+
 			return;
 		}
 		readingTypes = JSON.parse(body).data;
-		if(callback != undefined){
+		if (callback != undefined) {
 			callback();
 		}
 	});
@@ -47,7 +47,7 @@ function updateReadingTypes(callback) {
 
 
 function openPort() {
-	if(isPortOpen){
+	if (isPortOpen) {
 		return;
 	}
 	port.open(function(err) {
@@ -55,7 +55,7 @@ function openPort() {
 			isPortOpen = false;
 			console.log(err);
 			console.log("Error opening port, trying to open in 10 sec...")
-			setTimeout(openPort,10000);
+			setTimeout(openPort, 10000);
 			return;
 		}
 		isPortOpen = true;
@@ -64,12 +64,20 @@ function openPort() {
 	});
 }
 
+setInterval(function() {
+	requestReading(true)
+}, configData.logInterval * 1000);
+
+setInterval(function() {
+	requestReading(false)
+}, 2000);
 
 
-setInterval(requestReading, configData.logInterval*1000);
+var logData = false;
 
-function requestReading() {
-	if(!isPortOpen){
+function requestReading(log) {
+	logData = log;
+	if (!isPortOpen) {
 		console.log("port not open")
 		return;
 	}
@@ -81,7 +89,7 @@ updateReadingTypes(openPort);
 port.on('close', function(err) {
 	isPortOpen = false;
 	console.log("port closed, trying to open in 5 sec...")
-	setTimeout(openPort,5000);
+	setTimeout(openPort, 5000);
 	openPort();
 });
 
@@ -103,7 +111,7 @@ port.on('data', function(data) {
 
 		var hexCombined = "0x";
 		// skip if packageoffset is not set		
-		if(readingTypes[i].davisSerialPacketOffset == null){
+		if (readingTypes[i].davisSerialPacketOffset == null) {
 			continue;
 		}
 
@@ -134,26 +142,57 @@ port.on('data', function(data) {
 
 		var jsonData = {
 			"readingDate": new Date(),
+			"shortname": readingTypes[i].shortname,
 			"readingTypeID": readingTypes[i].readingTypeID,
+			"readingTypeName": readingTypes[i].readingTypeName,
 			"sourceID": configData.weatherStationSourceID,
-			"value": value
+			"value": value,
+			"unit": readingTypes[i].unit
 		};
-		
+
+
+		if (!logData) {
+			if (isWebsocketOpen) {
+			
+				ws.send(JSON.stringify(jsonData));
+			}
+			else{
+				openWecsocket();
+			}
+			continue;
+		}
+
 		var url = "http://" + configData.apiadress + ":" + configData.port + "/api/insert/reading/";
-		console.log("write",url,jsonData);
 		request.post({
 				url: url,
 				form: jsonData
 			},
 			function(err, httpResponse, body) {
-				if(err){
-					console.log(err);
+				if (err) {
 					console.log("could not write readings :/ ")
-				}
-				else{
-					console.log(body);
+					console.log(err);
+				} else {
+					logData = false;
 				}
 
 			});
 	}
 })
+
+
+var ws = null;
+var isWebsocketOpen = false;
+function openWecsocket() {
+
+	ws = new WebSocket('ws://' + configData.apiadress + ':' + configData.websocketPort);
+	
+	ws.on('open', function open() {
+		isWebsocketOpen = true;
+	});
+
+	ws.on('close', function open() {
+		isWebsocketOpen = false;
+		ws = null;
+	});
+
+}
