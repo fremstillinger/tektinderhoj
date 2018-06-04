@@ -183,9 +183,15 @@ port.on('data', function(data) {
 var ws = null;
 var isWebsocketOpen = false;
 function openWecsocket() {
+	var wsPath = 'ws://' + configData.apiadress + ':' + configData.websocketPort;
 	try{
-	ws = new WebSocket('ws://' + configData.apiadress + ':' + configData.websocketPort);
-	
+	ws = new WebSocket();
+	}
+	catch(e){
+		console.log(e,wsPath);
+
+	}
+
 	ws.on('open', function open() {
 		isWebsocketOpen = true;
 	});
@@ -194,10 +200,6 @@ function openWecsocket() {
 		isWebsocketOpen = false;
 		ws = null;
 	});
-	}
-	catch(e){
-		console.log(e);
-
-	}
-
 }
+	
+
