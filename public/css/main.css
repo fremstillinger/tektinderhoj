@@ -1,16 +1,12 @@
 html,body{
 	
-	background-color: rgb(255,255,255); 
-	background-image: url('/img/slogan.png');
-	background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: right bottom; 
-    background-size: 100px 100px;
+	background-color: #f2f4da;
+    color:#306a45;
 }
 
 
-.nav-bar{
-	background-color: rgb(240, 243,218); 
+.navbar{
+	background-color: #306a45; 
 }
 
 .chart{
@@ -27,7 +23,18 @@ html,body{
 }
 
 .liveData{
-	padding: 20px;
+	
 	background-color: #a1c436;
 	color:#306a45;
+
+}
+
+.row{
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+}
+
+.nav-link{
+		color:#a1c436;
 }

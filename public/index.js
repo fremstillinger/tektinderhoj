@@ -155,15 +155,14 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	$scope.chartController = function(name) {
 		var self = this;
 		this.name = name;
-		/*
+		
 		this.colors = [{
 			//backgroundColor:"#330",
 			//hoverBackgroundColor:"#FF0000",
-			borderColor: "#FF0000",
+			borderColor: "#484c92",
 			// hoverBorderColor:"#00F"
 		}]
-		*/
-
+		
 		this.datasetOverrides = [{
 			label: 'Override Series A',
 			borderWidth: 1,
