@@ -68,7 +68,7 @@ wss.on('connection', function connection(ws) {
 	sendToAllClients(livedata);
 	ws.on("message",function(data){
 		var receivedData = JSON.parse(data);
-		console.log(receivedData);
+	
 		var paramExistsInLivedata = false;
 		for(var i=0; i<livedata.length; i++){
 			if(livedata[i].shortname == receivedData.shortname){
@@ -86,13 +86,13 @@ wss.on('connection', function connection(ws) {
 
 function sendToAllClients(data){
 	for(var i=0; i<websocketClients.length; i++){
-		console.log(websocketClients[i]);
+
 		try{
 			websocketClients[i].send(JSON.stringify(data));
 		}
 		catch(e){
 			 websocketClients.splice(i,1);
-			console.log(e);
+		
 		}
 	}
 }

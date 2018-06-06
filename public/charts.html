@@ -1,8 +1,7 @@
 
 <div class="row liveData">
 		<div class="col-md-3"><h5>Live data</h5></div>
-		<div class="col-md-3 unit"   ng-repeat="param in parametre"">
-	
+		<div class="col-md-3 unit" ng-repeat="param in parametre"">
 		<p ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).readingTypeName"></p>
 		<h2 class="u" ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).value"></h2><p  ng-model-options="{ getterSetter: true }" class="u" ng-bind="getLivedataByShortname(param).unit"></p>
 </div>
