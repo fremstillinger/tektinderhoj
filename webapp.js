@@ -41,10 +41,6 @@ app.use('/', express.static(__dirname + '/public'));
 
 require('./routes')(app, dbPool);
 
-app.get('/*', function(req, res) {
-	res.redirect('/');
-});
-
 app.listen(configData.port, () => {
 	console.log('We are live on ' + configData.port);
 });
