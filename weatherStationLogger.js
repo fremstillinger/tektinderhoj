@@ -106,7 +106,6 @@ port.on('data', function(data) {
 
 	data = data.slice(1, 99);
 
-
 	for (var i = 0; i < readingTypes.length; i++) {
 
 		var hexCombined = "0x";
@@ -150,7 +149,6 @@ port.on('data', function(data) {
 			"unit": readingTypes[i].unit
 		};
 
-
 		if (!logData) {
 			if (isWebsocketOpen) {
 			
@@ -182,6 +180,7 @@ port.on('data', function(data) {
 
 var ws = null;
 var isWebsocketOpen = false;
+
 function openWecsocket() {
 	var wsPath = 'ws://' + configData.apiadress + ':' + configData.websocketPort;
 	try{
@@ -192,13 +191,15 @@ function openWecsocket() {
 
 	}
 
-	ws.on('open', function open() {
+	ws.on('open', function(){
 		isWebsocketOpen = true;
 	});
 
-	ws.on('close', function open() {
+	ws.on('close', function() {
 		isWebsocketOpen = false;
 		ws = null;
+		console.log("websocket closed, opening in 5 sec...")
+		setTimeout(openWecsocket,5000);
 	});
 }
 	
