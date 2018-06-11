@@ -104,7 +104,6 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 	$scope.toogleParameter = function(readingTypeName) {
-		console.log("toogleParameter",readingTypeName);
 		
 		var indexOfParam = $scope.parametre.indexOf(readingTypeName);
 
