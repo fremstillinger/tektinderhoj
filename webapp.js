@@ -20,7 +20,8 @@ var dbOptions = {
 	user: configData.database.user,
 	password: configData.database.password,
 	database: configData.database.database,
-	connectionLimit: 1000
+	connectionLimit: 1000,
+	timezone: 'UTC+2'
 }
 
 var dbPool = mysql.createPool(dbOptions);
@@ -40,6 +41,8 @@ app.use(bodyParser.urlencoded({
 app.use('/', express.static(__dirname + '/public'));
 
 require('./routes')(app, dbPool);
+
+
 
 app.listen(configData.port, () => {
 	console.log('We are live on ' + configData.port);
