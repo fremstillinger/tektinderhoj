@@ -21,7 +21,7 @@ var dbOptions = {
 	password: configData.database.password,
 	database: configData.database.database,
 	connectionLimit: 1000,
-	timezone: 'UTC+2'
+	timezone: 'utc'
 }
 
 var dbPool = mysql.createPool(dbOptions);
