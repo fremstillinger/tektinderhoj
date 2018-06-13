@@ -57,7 +57,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.openWebsocket = function() {
 
-		var connection = new WebSocket('ws://' + configData.apiAdress +":" + configData.websocketPort);
+		var connection = new WebSocket('ws://' + configData.wsAdress );
 		// When the connection is open, send some data to the server
 		connection.onopen = function() {
 			$scope.livedataConnected = true;
@@ -135,12 +135,12 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			endDate: $scope.endDate.toISOString()
 		});
 
-		var url = 'http://' + configData.apiAdress + ':' + configData.port + '/api/download/TekTinderhoejDataSet.xlsx?' + p;
+		var url = 'http://' + configData.apiAdress +'/api/download/TekTinderhoejDataSet.xlsx?' + p;
 		$window.open(url, '_blank');
 	}
 
 
-	$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readingTypes/').then(function(res) {
+	$http.get('http://' + configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
 		//$scope.readingTypes = ;
 		for(var i=0; i<res.data.data.length; i++){
 			var obj = res.data.data[i];
@@ -178,7 +178,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		this.labels = [];
 
 
-		$http.get('http://' + configData.apiAdress + ':' + configData.port + '/api/get/readings/' + self.name, {
+		$http.get('http://' + configData.apiAdress + '/api/get/readings/' + self.name, {
 				params: {
 					startDate: $scope.startDate.toISOString(),
 					endDate: $scope.endDate.toISOString()
