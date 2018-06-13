@@ -39,7 +39,7 @@ module.exports = function(app, dbPool) {
 				}
 
 			} else {
-				var url = 'http://' + configData.apiadress + ':' + configData.port + '/api/get/readings/' + params[numDownloaded];
+				var url = 'http://' + configData.apiadress + '/api/get/readings/' + params[numDownloaded];
 				request({
 					url: url,
 					qs: {
