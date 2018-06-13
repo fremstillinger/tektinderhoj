@@ -88,13 +88,13 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.startDateChanged = function() {
 		$route.updateParams({
-			"startDate": $scope.startDate.toISOString()
+			"startDate": new Date($scope.startDate.getTime() - ($scope.startDate.getTimezoneOffset() * 60000)).toISOString()
 		});
 
 	}
 	$scope.endDateChanged = function() {
 		$route.updateParams({
-			"endDate": $scope.endDate.toISOString()
+			"endDate": new Date($scope.endDate.getTime() - ($scope.endDate.getTimezoneOffset() * 60000)).toISOString()
 		});
 	}
 

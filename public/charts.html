@@ -1,6 +1,6 @@
 
 <div class="row liveData">
-		<div class="col-md-3"><h5>Live data</h5></div>
+		<div class="col-md-3"><h5>Live data</h5><p><small>- direkte fra målerne</small></p></div>
 		<div class="col-md-3 unit" ng-repeat="param in parametre"">
 		<p ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).readingTypeName"></p>
 		<h2 class="u" ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).value"></h2><p  ng-model-options="{ getterSetter: true }" class="u" ng-bind="getLivedataByShortname(param).unit"></p>
@@ -13,6 +13,8 @@
 <div class="row">
 			<div class="col-md-2">
 				<h5>Periode</h5>
+				<p><small>Her kan se data for en valgt periode</small></p>
+
 			</div>
 			<div class="col-md-4">
 			

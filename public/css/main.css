@@ -4,11 +4,6 @@ html,body{
     color:#306a45;
 }
 
-
-.navbar{
-	background-color: #306a45; 
-}
-
 .chart{
 	margin-top:20px;
 }
@@ -37,4 +32,19 @@ html,body{
 
 .nav-link{
 		color:#a1c436;
+}
+
+
+
+.topbar{
+	background-color: #306a45; 
+	color:#a1c436;
+}
+
+.topbar a{
+	color:#a1c436;
+	text-decoration: underline;
+}
+.colpadding{
+	padding-left: 10px;
 }
