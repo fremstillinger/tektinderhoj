@@ -10,9 +10,8 @@ module.exports = function(app, dbPool) {
 
 	/* download excelfile */
 
-	app.get("/api/download/TekTinderhoejDataSet.xlsx", (req, res) => {
+	app.get("/api/downloadDataset/", (req, res) => {
 		var params = req.query.parameters.split(",")
-		console.log("download ", params, req.query.startDate, req.query.endDate);
 
 		var workbook = new Excel.Workbook();
 		workbook.creator = 'TEK Tinderhøj';
@@ -26,6 +25,8 @@ module.exports = function(app, dbPool) {
 		function downloadNextParameter() {
 			if (numDownloaded == params.length) {
 				if (numDownloaded == params.length) {
+					res.setHeader('Content-disposition', 'attachment; filename=TinderhoejData(' + params.join("+") + ')_fra_' + moment(new Date(req.query.startDate)).format("DD/MM/YYYY") + '_til_' + moment(new Date(req.query.endDate)).format("DD/MM/YYYY") +  '.xlsx');
+
 					workbook.xlsx.write(res)
 						.then(function() {
 							// done
@@ -61,7 +62,7 @@ module.exports = function(app, dbPool) {
 						if(body.data.rows.length > 0){
 							ws.columns[1].header = body.data.rows[0].readingTypeName;
 						}
-						console.log(body.data.rows);
+						
 						ws.addRows(body.data.rows);
 						numDownloaded += 1;
 						downloadNextParameter();
@@ -129,7 +130,6 @@ module.exports = function(app, dbPool) {
 		if (req.query.endDate != undefined) {
 			endDate = moment(new Date(req.query.endDate));
 		}
-		console.log(startDate, endDate);
 
 		var daysSpan = (endDate - startDate) / 1000 / 60 / 60 / 24;
 		startDate = startDate.startOf('day');

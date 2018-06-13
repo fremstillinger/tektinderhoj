@@ -135,7 +135,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			endDate: $scope.endDate.toISOString()
 		});
 
-		var url = 'http://' + configData.apiAdress +'/api/download/TekTinderhoejDataSet.xlsx?' + p;
+		var url = 'http://' + configData.apiAdress +'/api/downloadDataset/?' + p;
 		$window.open(url, '_blank');
 	}
 

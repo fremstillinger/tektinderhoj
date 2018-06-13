@@ -44,7 +44,7 @@ require('./routes')(app, dbPool);
 
 
 
-app.listen(configData.port, () => {
+app.listen(configData.port,"127.0.0.1", () => {
 	console.log('We are live on ' + configData.port);
 });
 
