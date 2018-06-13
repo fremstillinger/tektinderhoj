@@ -11,11 +11,13 @@ module.exports = function(app, dbPool) {
 	/* download excelfile */
 
 	app.get("/api/downloadDataset/", (req, res) => {
-		
-							res.setHeader('Content-disposition', 'attachment; filename=TinderhoejData(' + params.join("+") + ')_fra_' + moment(new Date(req.query.startDate)).format("DD/MM/YYYY") + '_til_' + moment(new Date(req.query.endDate)).format("DD/MM/YYYY") +  '.xlsx');
+
 
 
 		var params = req.query.parameters.split(",")
+
+		res.setHeader('Content-disposition', 'attachment; filename=TinderhoejData(' + params.join("+") + ')_fra_' + moment(new Date(req.query.startDate)).format("DD/MM/YYYY") + '_til_' + moment(new Date(req.query.endDate)).format("DD/MM/YYYY") + '.xlsx');
+
 
 		var workbook = new Excel.Workbook();
 		workbook.creator = 'TEK Tinderhøj';
@@ -55,17 +57,17 @@ module.exports = function(app, dbPool) {
 							header: 'Tidspunkt',
 							key: 'scale',
 							width: 30
-						},{
+						}, {
 							header: 'Værdi',
 							key: 'value',
 							width: 30,
 							outlineLevel: 1
 						}];
-					
-						if(body.data.rows.length > 0){
+
+						if (body.data.rows.length > 0) {
 							ws.columns[1].header = body.data.rows[0].readingTypeName;
 						}
-						
+
 						ws.addRows(body.data.rows);
 						numDownloaded += 1;
 						downloadNextParameter();
@@ -79,7 +81,6 @@ module.exports = function(app, dbPool) {
 
 
 	});
-
 
 
 
