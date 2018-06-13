@@ -25,7 +25,7 @@ module.exports = function(app, dbPool) {
 		function downloadNextParameter() {
 			if (numDownloaded == params.length) {
 				if (numDownloaded == params.length) {
-					res.setHeader('Content-disposition', 'attachment; filename=TinderhoejData(' + params.join("+") + ')_fra_' + moment(new Date(req.query.startDate)).format("DD/MM/YYYY") + '_til_' + moment(new Date(req.query.endDate)).format("DD/MM/YYYY") +  '.xlsx');
+					//res.setHeader('Content-disposition', 'attachment; filename=TinderhoejData(' + params.join("+") + ')_fra_' + moment(new Date(req.query.startDate)).format("DD/MM/YYYY") + '_til_' + moment(new Date(req.query.endDate)).format("DD/MM/YYYY") +  '.xlsx');
 
 					workbook.xlsx.write(res)
 						.then(function() {
@@ -78,14 +78,6 @@ module.exports = function(app, dbPool) {
 	});
 
 
-	/**
-	 * Get latest readings
-	 */
-
-	app.get('/api/get/readings/live', (req, res) => {
-
-
-	})
 
 
 	/**
