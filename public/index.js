@@ -19,7 +19,8 @@ app.config(function($routeProvider) {
 		})
 		.when("/", {
 			templateUrl: "charts.html",
-			controller: "chartCtrl"
+			controller: "chartCtrl",
+			reloadOnSearch:false
 		})
 });
 
@@ -86,16 +87,20 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$scope.parametre = $routeParams.parametre.split(",");
 	}
 
+
+
 	$scope.startDateChanged = function() {
 		$route.updateParams({
 			"startDate": new Date($scope.startDate.getTime() - ($scope.startDate.getTimezoneOffset() * 60000)).toISOString()
 		});
+		$scope.reloadChartdata();
 
 	}
 	$scope.endDateChanged = function() {
 		$route.updateParams({
 			"endDate": new Date($scope.endDate.getTime() - ($scope.endDate.getTimezoneOffset() * 60000)).toISOString()
 		});
+		$scope.reloadChartdata();
 	}
 
 	$scope.parameterSelected = function(readingTypeName) {
@@ -114,9 +119,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		}
 		
 
-		$route.updateParams({
-			"parametre": $scope.parametre.join(",")
-		});
+		
 		
 
 	}
@@ -145,7 +148,6 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		for(var i=0; i<res.data.data.length; i++){
 			var obj = res.data.data[i];
 			obj.selected = $scope.parametre.indexOf(obj.shortname) != -1;
-		
 			$scope.readingTypes.push(obj)
 		}
 	});
@@ -223,9 +225,20 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 
 	}
+	$scope.paramUpdates = function(){
+		$route.updateParams({
+			"parametre": $scope.parametre.join(",")
+		});
 
-	angular.forEach($scope.parametre, function(value, key) {
-		$scope.charts.push(new $scope.chartController(value));
-	});
+		$scope.reloadChartdata();
+	}
+    $scope.reloadChartdata = function(){
+
+    	$scope.charts = [];
+    	angular.forEach($scope.parametre, function(value, key) {
+			$scope.charts.push(new $scope.chartController(value));
+		});
+    }
+	$scope.reloadChartdata();
 
 }]);

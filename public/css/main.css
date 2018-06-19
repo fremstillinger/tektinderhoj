@@ -48,3 +48,7 @@ html,body{
 .colpadding{
 	padding-left: 10px;
 }
+
+
+.md-select-value *:first-child { flex: 1 1 auto; }
+
