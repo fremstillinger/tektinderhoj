@@ -16,7 +16,12 @@
     "csv-parse": "^2.5.0",
     "exceljs": "^1.5.1",
     "express": "^4.16.3",
+<<<<<<< HEAD
     "moment": "^2.22.2",
+=======
+    "modbus-serial": "^7.3.0",
+    "moment": "^2.22.1",
+>>>>>>> c0568931e4228c15e2fb562a064e65b5bde28797
     "prompt": "^1.0.0",
     "request": "^2.87.0",
     "serialport": "^6.2.1",

@@ -2,9 +2,9 @@
 <div class="row liveData">
 
 		
-		<div class="col-md-3 unit" ng-repeat="param in parametre"">
-		<p ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).readingTypeName"></p>
-		<h2 class="u" ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).value"></h2><p  ng-model-options="{ getterSetter: true }" class="u" ng-bind="getLivedataByShortname(param).unit"></p>
+		<div class="col-md-3 unit" ng-repeat="liveParam in liveDataParameters">
+		<p  ng-bind="liveParam.readingTypeName"></p>
+		<h2 class="u" ng-bind="liveParam.value"></h2><p class="u" ng-bind="liveParam.unit"></p>
 </div>
 
 	</div>
@@ -18,36 +18,31 @@
 				<p><small>Her kan se data for en valgt periode</small></p>
 
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 			
-<p><small>Fra</small>
+<md-input-container>
+	<label>Fra</label>
      <md-datepicker ng-model="startDate"  ng-change="startDateChanged()"  md-placeholder="Enter date"></md-datepicker>
-    	</p>
+    	</md-input-container>
   
      </div>
     
-     <div class="col-md-4">
+     <div class="col-md-3">
      
-<p><small>Til</small>
+	<md-input-container>
+        <label>Til</label>
       <md-datepicker ng-model="endDate" ng-change="endDateChanged()" md-placeholder="Enter date"></md-datepicker>
-      </p>
-     
-      
+      </md-input-container>    
   </div>
+	
 
-  	<div class="col-md-2">
-		
-	<div class="dropdown">
-				
-  <button class="btn dropdown-toggle" style="background-color:transparent"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Parametre</button>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  		<div class="checkbox dropdown-item" ng-repeat="readingType in readingTypes">
-			<label><input type="checkbox" ng-click="toogleParameter(readingType.shortname)" ng-model="readingType.selected" > {{readingType.readingTypeName}}</label>
-		</div>
-  </div>
-</div>
-
+	<div class="col-md-4">
+		 <md-input-container>
+        <label>Parametre</label>
+        <md-select flex="40" ng-change="paramUpdates()" ng-model="parametre" multiple>
+            <md-option ng-value="readingType.shortname"  ng-repeat="readingType in readingTypes">{{readingType.readingTypeName}}</md-option>
+        </md-select>
+      </md-input-container>
 	</div>
 
       </div>

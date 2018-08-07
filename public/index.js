@@ -19,12 +19,14 @@ app.config(function($routeProvider) {
 		})
 		.when("/", {
 			templateUrl: "charts.html",
-			controller: "chartCtrl"
+			controller: "chartCtrl",
+			reloadOnSearch: false
 		})
 });
 
+
 app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', function($scope, $routeParams, $route, $http, $timeout, $location, $window) {
-	
+
 	if ($routeParams.startDate != undefined) {
 		$scope.startDate = new Date($routeParams.startDate);
 	} else {
@@ -41,24 +43,16 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 
 	$scope.liveData = [];
+
+	$scope.liveDataParameters = [];
+
 	$scope.livedataConnected = false;
-
-
-	$scope.getLivedataByShortname = function(sn){
-		for(var i=0; i<$scope.liveData.length; i++){
-			var ld = $scope.liveData[i];
-			if(ld.shortname == sn){
-				return ld;
-			}
-		}
-		return {readingTypeName:sn,value:"--",unit:"--"};
-	}
 
 
 	$scope.openWebsocket = function() {
 
-		var connection = new WebSocket('ws://' + configData.wsAdress );
-		// When the connection is open, send some data to the server
+		var connection = new WebSocket('ws://' + configData.wsAdress);
+
 		connection.onopen = function() {
 			$scope.livedataConnected = true;
 		};
@@ -70,17 +64,40 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 		// Log messages from the server
 		connection.onmessage = function(e) {
+		
 			$timeout(function() {
-			$scope.liveData = JSON.parse(e.data);
-		},0);
-			//$scope.$apply();	
+				$scope.liveData = JSON.parse(e.data);
+				$scope.updateLiveData();
+			}, 0);
 		};
 	}
 
+	$scope.updateLiveData = function() {
+		$scope.liveDataParameters = [];
+
+		for (var p = 0; p < $scope.parametre.length; p++) {
+			for (var r = 0; r < $scope.readingTypes.length; r++) {
+				if ($scope.parametre[p] == $scope.readingTypes[r].shortname) {
+					var obj = $scope.readingTypes[r];
+					obj.value = "--";
+					obj.readingDate = "--";
+
+					for (var l = 0; l < $scope.liveData.length; l++) {
+						if ($scope.readingTypes[r].readingTypeID == $scope.liveData[l].readingTypeID) {
+							obj.value = $scope.liveData[l].value;
+							obj.readingDate = $scope.liveData[l].readingDate;
+						}
+					}
+					$scope.liveDataParameters.push(obj);
+				}
+			}
+		}
+	}
+
+
 	$scope.test = $routeParams;
 	$scope.openWebsocket();
-
-	$scope.parametre = ['temp','vind','uv','fugt'];
+	$scope.parametre = ['temp', 'vind', 'uv', 'fugt'];
 
 	if ($routeParams.parametre != undefined) {
 		$scope.parametre = $routeParams.parametre.split(",");
@@ -90,12 +107,14 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$route.updateParams({
 			"startDate": new Date($scope.startDate.getTime() - ($scope.startDate.getTimezoneOffset() * 60000)).toISOString()
 		});
+		$scope.reloadChartdata();
 
 	}
 	$scope.endDateChanged = function() {
 		$route.updateParams({
 			"endDate": new Date($scope.endDate.getTime() - ($scope.endDate.getTimezoneOffset() * 60000)).toISOString()
 		});
+		$scope.reloadChartdata();
 	}
 
 	$scope.parameterSelected = function(readingTypeName) {
@@ -104,48 +123,38 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 	$scope.toogleParameter = function(readingTypeName) {
-		
 		var indexOfParam = $scope.parametre.indexOf(readingTypeName);
-
 		if (indexOfParam != -1) {
 			$scope.parametre.splice(indexOfParam, 1)
 		} else {
 			$scope.parametre.push(readingTypeName)
 		}
-		
-
-		$route.updateParams({
-			"parametre": $scope.parametre.join(",")
-		});
-		
-
 	}
 
+	$scope.embedCode;
 
-	$scope.embedCode = "<iframe src='" + $location.absUrl() + "&embedMode" + "'></iframe>";
+	$scope.updateEmbedcode = function() {
+		$scope.embedCode = "<iframe src='" + $location.absUrl() + "&embedMode" + "'></iframe>";
+	}
 
 	$scope.charts = [];
 	$scope.readingTypes = [];
 
 	$scope.downloadExcelfile = function() {
-
 		var p = $.param({
 			parameters: $scope.parametre.join(","),
 			startDate: $scope.startDate.toISOString(),
 			endDate: $scope.endDate.toISOString()
 		});
 
-		var url = 'http://' + configData.apiAdress +'/api/downloadDataset/?' + p;
+		var url = 'http://' + configData.apiAdress + '/api/downloadDataset/?' + p;
 		$window.open(url, '_blank');
 	}
 
-
 	$http.get('http://' + configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
-		//$scope.readingTypes = ;
-		for(var i=0; i<res.data.data.length; i++){
+		for (var i = 0; i < res.data.data.length; i++) {
 			var obj = res.data.data[i];
 			obj.selected = $scope.parametre.indexOf(obj.shortname) != -1;
-		
 			$scope.readingTypes.push(obj)
 		}
 	});
@@ -154,14 +163,14 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	$scope.chartController = function(name) {
 		var self = this;
 		this.name = name;
-		
+
 		this.colors = [{
 			//backgroundColor:"#330",
 			//hoverBackgroundColor:"#FF0000",
 			borderColor: "#484c92",
 			// hoverBorderColor:"#00F"
 		}]
-		
+
 		this.datasetOverrides = [{
 			label: 'Override Series A',
 			borderWidth: 1,
@@ -191,7 +200,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 						//var d = new Date(res.data.data[i].readingDate);
 						self.data[0].push(res.data.data.rows[i].value);
 						self.labels.push(res.data.data.rows[i].scale);
-						readingTypeName = res.data.data.rows[i].readingTypeName + " " +  res.data.data.rows[i].unit ;
+						readingTypeName = res.data.data.rows[i].readingTypeName + " " + res.data.data.rows[i].unit;
 					}
 
 					self.series = [readingTypeName];
@@ -220,12 +229,22 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 				}, 0);
 
 			});
-
-
 	}
 
-	angular.forEach($scope.parametre, function(value, key) {
-		$scope.charts.push(new $scope.chartController(value));
-	});
 
+	$scope.paramUpdates = function() {
+		$route.updateParams({
+			"parametre": $scope.parametre.join(",")
+		});
+		$scope.reloadChartdata();
+	}
+
+	$scope.reloadChartdata = function() {
+		$scope.updateEmbedcode();
+		$scope.charts = [];
+		angular.forEach($scope.parametre, function(value, key) {
+			$scope.charts.push(new $scope.chartController(value));
+		});
+	}
+	$scope.reloadChartdata();
 }]);
