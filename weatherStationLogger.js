@@ -3,12 +3,12 @@ var request = require('request');
 var cron = require('cron');
 const apiCalls = require('./apiCalls');
 
-
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 var isPortOpen = false;
 
-
 var SerialPort = require('serialport');
+
+
 var port = new SerialPort(configData.weatherstationUSBadress, {
 	baudRate: 19200,
 	autoOpen: false
@@ -23,15 +23,13 @@ new cron.CronJob({
 	start: true
 });
 
-
 function updateReadingTypes() {
-    apiCalls.getReadingTypes(function(d) {
-        readingTypes = d;
-    })
+	apiCalls.getReadingTypes(function(d) {
+		readingTypes = d;
+	})
 };
 
 updateReadingTypes();
-
 
 function openPort() {
 	if (isPortOpen) {
@@ -47,24 +45,16 @@ function openPort() {
 		}
 		isPortOpen = true;
 		console.log("Port open :)")
-		requestReading();
+
+		setInterval(function() {
+			requestReading()
+		}, 2000);
+
 	});
 }
 
-setInterval(function() {
-	requestReading(true)
-}, configData.logInterval * 1000);
-
-
-setInterval(function() {
-	requestReading(false)
-}, 2000);
-
-
-var logData = false;
-
-function requestReading(log) {
-	logData = log;
+function requestReading() {
+	console.log("requestReading");
 	if (!isPortOpen) {
 		console.log("port not open")
 		return;
@@ -72,7 +62,7 @@ function requestReading(log) {
 	port.write('LPS 0 1\n')
 }
 
-updateReadingTypes(openPort);
+openPort();
 
 port.on('close', function(err) {
 	isPortOpen = false;
@@ -84,6 +74,7 @@ port.on('close', function(err) {
 // on data received from Davis USB logger
 
 port.on('data', function(data) {
+	
 
 	if (data.length != 100) {
 		return;
@@ -95,6 +86,8 @@ port.on('data', function(data) {
 
 	data = data.slice(1, 99);
 
+
+
 	for (var i = 0; i < readingTypes.length; i++) {
 
 		var hexCombined = "0x";
@@ -102,6 +95,7 @@ port.on('data', function(data) {
 		if (readingTypes[i].davisSerialPacketOffset == null) {
 			continue;
 		}
+
 
 		// read as little endian 
 		for (var p = readingTypes[i].davisSerialPacketParameterSize; p > 0; p--) {
@@ -131,7 +125,7 @@ port.on('data', function(data) {
 		}
 		*/
 
-         apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
+		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
 	}
 })

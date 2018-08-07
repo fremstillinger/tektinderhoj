@@ -39,6 +39,7 @@ openWecsocket();
 
 exports.getReadingTypes = function(callback) {
 	var url = "http://" + configData.apiadress + ":" + configData.port + "/api/get/readingTypes/";
+
 	request(url, function(error, response, body) {
 		if (error != null) {
 			setTimeout(function() {
@@ -46,6 +47,7 @@ exports.getReadingTypes = function(callback) {
 			}, 5000);
 			return;
 		}
+
 		readingTypes = JSON.parse(body).data;
 
 		if (callback != undefined) {

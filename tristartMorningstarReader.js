@@ -17,16 +17,12 @@ client.setID(1);
 var v_scale = 96.667 * 2 ** (-15);
 var ampScale = 66.667 * 2 ** (-15);
 
+function doReading() {
 
-function readVoltage() {
-
-    //rr.registers[8] * v_scale
-    //client.readHoldingRegisters(8, 20, function(err, data) {
     client.readHoldingRegisters(0, 20, function(err, data) {
-
-
-
+        console.log(data);
         if (data != undefined) {
+
 
 
             for (var i = 0; i < readingTypes.length; i++) {
@@ -35,10 +31,11 @@ function readVoltage() {
                     var readingIndex = rt.readingData * 1 - 1;
                     var value = data.data[readingIndex];
                     eval(rt.readingConversion);
-                    // function(readingTypeID, sourceID, value) 
+                    console.log(value);
                     apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value);
                 }
             }
+
 
 
             //console.log("Battery voltage, filtered (τ ≈ 2.5s)",data.data[0]*v_scale);
@@ -74,9 +71,10 @@ var readingTypes = [];
 function updateReadingTypes() {
     apiCalls.getReadingTypes(function(d) {
         readingTypes = d;
+        console.log(readingTypes);
     })
 };
 
 updateReadingTypes();
 
-setInterval(readVoltage, 2000);
+setInterval(doReading, 2000);
