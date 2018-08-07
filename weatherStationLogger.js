@@ -1,7 +1,7 @@
 const fs = require('fs');
 var request = require('request');
-const WebSocket = require('ws');
 var cron = require('cron');
+const apiCalls = require('./apiCalls');
 
 
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
@@ -24,26 +24,13 @@ new cron.CronJob({
 });
 
 
-function updateReadingTypes(callback) {
-	var url = "http://" + configData.apiadress + "/api/get/readingTypes/";
+function updateReadingTypes() {
+    apiCalls.getReadingTypes(function(d) {
+        readingTypes = d;
+    })
+};
 
-	request(url, function(error, response, body) {
-		if (error != null) {
-			console.log(error);
-			console.log("Could not load readingtypes :/ trying again in 5 sec...")
-
-			setTimeout(function() {
-				updateReadingTypes(callback)
-			}, 5000);
-
-			return;
-		}
-		readingTypes = JSON.parse(body).data;
-		if (callback != undefined) {
-			callback();
-		}
-	});
-}
+updateReadingTypes();
 
 
 function openPort() {
@@ -123,7 +110,9 @@ port.on('data', function(data) {
 		}
 
 		var value = parseInt(hexCombined);
+		eval(readingTypes[i].readingConversion);
 
+		/*
 		switch (readingTypes[i].shortname) {
 			case "temp":
 				//convert from farenheit to celcius
@@ -140,70 +129,8 @@ port.on('data', function(data) {
 			default:
 				break;
 		}
+		*/
 
-		var jsonData = {
-			"readingDate": new Date(),
-			"shortname": readingTypes[i].shortname,
-			"readingTypeID": readingTypes[i].readingTypeID,
-			"readingTypeName": readingTypes[i].readingTypeName,
-			"sourceID": configData.weatherStationSourceID,
-			"value": value,
-			"unit": readingTypes[i].unit
-		};
-
-		if (!logData) {
-			if (isWebsocketOpen) {
-			
-				ws.send(JSON.stringify(jsonData));
-			}
-			else{
-				openWecsocket();
-			}
-			continue;
-		}
-		console.log("save",jsonData);
-		var url = "http://" + configData.apiadress + "/api/insert/reading/";
-		request.post({
-				url: url,
-				form: jsonData
-			},
-			function(err, httpResponse, body) {
-				if (err) {
-					console.log("could not write readings :/ ")
-					console.log(err);
-				} else {
-					console.log("data saved!",body);
-					logData = false;
-				}
-
-			});
+         apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 	}
 })
-
-
-var ws = null;
-var isWebsocketOpen = false;
-
-function openWecsocket() {
-	var wsPath = 'ws://' + configData.apiadress + ':' + configData.websocketPort;
-	try{
-	ws = new WebSocket(wsPath);
-	}
-	catch(e){
-		console.log(e,wsPath);
-
-	}
-
-	ws.on('open', function(){
-		isWebsocketOpen = true;
-	});
-
-	ws.on('close', function() {
-		isWebsocketOpen = false;
-		ws = null;
-		console.log("websocket closed, opening in 5 sec...")
-		setTimeout(openWecsocket,5000);
-	});
-}
-	
-

@@ -16,6 +16,7 @@
     "csv-parse": "^2.4.0",
     "exceljs": "^1.4.6",
     "express": "^4.16.3",
+    "modbus-serial": "^7.3.0",
     "moment": "^2.22.1",
     "prompt": "^1.0.0",
     "request": "^2.86.0",
