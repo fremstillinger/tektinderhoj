@@ -97,7 +97,7 @@ port.on('close', function(err) {
 // on data received from Davis USB logger
 
 port.on('data', function(data) {
-	console.log(data);
+
 	if (data.length != 100) {
 		return;
 	}
@@ -161,7 +161,7 @@ port.on('data', function(data) {
 			}
 			continue;
 		}
-		console.log("save",jsonData);
+		
 		var url = "http://" + configData.apiadress + "/api/insert/reading/";
 		request.post({
 				url: url,
@@ -170,9 +170,9 @@ port.on('data', function(data) {
 			function(err, httpResponse, body) {
 				if (err) {
 					console.log("could not write readings :/ ")
-					console.log(err);
+					
 				} else {
-					console.log("data saved!",body);
+					
 					logData = false;
 				}
 
