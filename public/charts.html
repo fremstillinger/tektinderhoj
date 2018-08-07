@@ -2,9 +2,9 @@
 <div class="row liveData">
 
 		
-		<div class="col-md-3 unit" ng-repeat="param in parametre"">
-		<p ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).readingTypeName"></p>
-		<h2 class="u" ng-model-options="{ getterSetter: true }" ng-bind="getLivedataByShortname(param).value"></h2><p  ng-model-options="{ getterSetter: true }" class="u" ng-bind="getLivedataByShortname(param).unit"></p>
+		<div class="col-md-3 unit" ng-repeat="liveParam in liveDataParameters">
+		<p  ng-bind="liveParam.readingTypeName"></p>
+		<h2 class="u" ng-bind="liveParam.value"></h2><p class="u" ng-bind="liveParam.unit"></p>
 </div>
 
 	</div>
