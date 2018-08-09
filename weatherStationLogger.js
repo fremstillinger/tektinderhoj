@@ -54,7 +54,6 @@ function openPort() {
 }
 
 function requestReading() {
-	console.log("requestReading");
 	if (!isPortOpen) {
 		console.log("port not open")
 		return;
@@ -105,25 +104,6 @@ port.on('data', function(data) {
 
 		var value = parseInt(hexCombined);
 		eval(readingTypes[i].readingConversion);
-		console.log(value);
-		/*
-		switch (readingTypes[i].shortname) {
-			case "temp":
-				//convert from farenheit to celcius
-				value = value / 10;
-				value = (value - 32) * 5 / 9;
-				value = Math.round(value * 10) / 10;
-				break;
-
-			case "barometer":
-				//convert from hg to hpa
-
-				value = value / 1000;
-				break;
-			default:
-				break;
-		}
-		*/
 
 		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
