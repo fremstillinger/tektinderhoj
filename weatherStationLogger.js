@@ -105,7 +105,7 @@ port.on('data', function(data) {
 
 		var value = parseInt(hexCombined);
 		eval(readingTypes[i].readingConversion);
-
+		console.log(value);
 		/*
 		switch (readingTypes[i].shortname) {
 			case "temp":
