@@ -3,10 +3,12 @@ var request = require('request');
 var cron = require('cron');
 const apiCalls = require('./apiCalls');
 
-
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 var isPortOpen = false;
+
 var SerialPort = require('serialport');
+
+
 var port = new SerialPort(configData.weatherstationUSBadress, {
 	baudRate: 19200,
 	autoOpen: false
@@ -21,16 +23,15 @@ new cron.CronJob({
 	start: true
 });
 
-
 function updateReadingTypes() {
-    apiCalls.getReadingTypes(function(d) {
-        readingTypes = d;
-    })
+	apiCalls.getReadingTypes(function(d) {
+		readingTypes = d;
+	})
 };
 
 updateReadingTypes();
-openPort();
 
+openPort();
 
 function openPort() {
 	if (isPortOpen) {
@@ -51,7 +52,6 @@ function openPort() {
 }
 
 
-
 setInterval(function() {
 	requestReading()
 }, 2000);
@@ -66,8 +66,6 @@ function requestReading() {
 	port.write('LPS 0 1\n')
 }
 
-
-
 port.on('close', function(err) {
 	isPortOpen = false;
 	console.log("port closed, trying to open in 5 sec...")
@@ -79,6 +77,7 @@ port.on('close', function(err) {
 
 port.on('data', function(data) {
 	
+
 	if (data.length != 100) {
 		return;
 	}
@@ -89,6 +88,8 @@ port.on('data', function(data) {
 
 	data = data.slice(1, 99);
 
+
+
 	for (var i = 0; i < readingTypes.length; i++) {
 
 		var hexCombined = "0x";
@@ -96,6 +97,7 @@ port.on('data', function(data) {
 		if (readingTypes[i].davisSerialPacketOffset == null) {
 			continue;
 		}
+
 
 		// read as little endian 
 		for (var p = readingTypes[i].davisSerialPacketParameterSize; p > 0; p--) {
@@ -106,25 +108,7 @@ port.on('data', function(data) {
 		var value = parseInt(hexCombined);
 		eval(readingTypes[i].readingConversion);
 
-		/*
-		switch (readingTypes[i].shortname) {
-			case "temp":
-				//convert from farenheit to celcius
-				value = value / 10;
-				value = (value - 32) * 5 / 9;
-				value = Math.round(value * 10) / 10;
-				break;
+		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
-			case "barometer":
-				//convert from hg to hpa
-
-				value = value / 1000;
-				break;
-			default:
-				break;
-		}
-		*/
-
-         apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 	}
 })

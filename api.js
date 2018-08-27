@@ -233,6 +233,8 @@ module.exports = function(app, dbPool) {
 	 */
 
 	app.post("/api/insert/reading/", (req, res) => {
+		console.log("insert reading",req);
+	
 
 		dbPool.getConnection(function(err, db) {
 			if (err) {
