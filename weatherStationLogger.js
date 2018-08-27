@@ -6,8 +6,6 @@ const apiCalls = require('./apiCalls');
 
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 var isPortOpen = false;
-
-
 var SerialPort = require('serialport');
 var port = new SerialPort(configData.weatherstationUSBadress, {
 	baudRate: 19200,
@@ -31,6 +29,7 @@ function updateReadingTypes() {
 };
 
 updateReadingTypes();
+openPort();
 
 
 function openPort() {
@@ -51,20 +50,15 @@ function openPort() {
 	});
 }
 
-setInterval(function() {
-	requestReading(true)
-}, configData.logInterval * 1000);
 
 
 setInterval(function() {
-	requestReading(false)
+	requestReading()
 }, 2000);
 
 
-var logData = false;
 
-function requestReading(log) {
-	logData = log;
+function requestReading() {
 	if (!isPortOpen) {
 		console.log("port not open")
 		return;
@@ -72,7 +66,7 @@ function requestReading(log) {
 	port.write('LPS 0 1\n')
 }
 
-updateReadingTypes(openPort);
+
 
 port.on('close', function(err) {
 	isPortOpen = false;
@@ -84,7 +78,7 @@ port.on('close', function(err) {
 // on data received from Davis USB logger
 
 port.on('data', function(data) {
-	console.log(data);
+	
 	if (data.length != 100) {
 		return;
 	}

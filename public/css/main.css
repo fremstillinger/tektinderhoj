@@ -17,6 +17,10 @@ html,body{
     vertical-align: top;
 }
 
+.unit p{
+	margin-bottom: 0px;
+}
+
 .liveData{
 	
 	background-color: #a1c436;

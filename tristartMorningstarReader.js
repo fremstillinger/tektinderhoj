@@ -3,6 +3,14 @@ var client = new ModbusRTU();
 const fs = require('fs');
 const WebSocket = require('ws');
 const apiCalls = require('./apiCalls');
+var cron = require('cron');
+
+// reload readingtypes every hour
+new cron.CronJob({
+    cronTime: '* 00 * * * *',
+    onTick: updateReadingTypes,
+    start: true
+});
 
 
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
@@ -34,6 +42,7 @@ function readVoltage() {
                 if (rt.deviceType == "tristar") {
                     var readingIndex = rt.readingData * 1 - 1;
                     var value = data.data[readingIndex];
+                  
                     eval(rt.readingConversion);
                     // function(readingTypeID, sourceID, value) 
                     apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value);
