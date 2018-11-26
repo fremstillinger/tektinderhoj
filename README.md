@@ -1,4 +1,6 @@
-# tektinderhoj
+# TekTinderhøj
+
+This project contains applications for reading, logging and showing data form the Project TekTinderhøj.  
 
 ## Webserver
 
