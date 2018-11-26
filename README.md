@@ -1,10 +1,6 @@
 # tektinderhoj
 
-
-
-
-
-needs config.json with following parameters
+## needs config.json with following parameters
 
 {	
 	"port":****, // port of the webserver
