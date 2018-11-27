@@ -7,11 +7,11 @@ This project contains applications for reading, logging and showing data form th
 The webapp.js contains server which is to be run in a Nodejs enviroment
 
 ## Tristar logger
-The tristarMorningstarReader.js file contains application for reading data from the MODBUS output of the Tristar Morningstar charge controller
+The tristarMorningstarLogger.js file contains application for reading data from the MODBUS output of the Tristar Morningstar charge controller
 
 ## Davis Weatherstations Logger
 
-The weatherstationLogger.js file contains a node for reading the parameters from the Davis Weatherstation logger.
+The weatherstationLogger.js file contains the application for reading the parameters of the Davis Weatherstation.
 
 
 ## needs config.json with following parameters
