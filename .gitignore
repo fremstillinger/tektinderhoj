@@ -1,5 +1,6 @@
 .DS_Store
 config.json
 config.js
+.AppleDouble
 /datasources/
 /node_modules/

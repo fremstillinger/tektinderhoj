@@ -31,6 +31,8 @@ function updateReadingTypes() {
 
 updateReadingTypes();
 
+openPort();
+
 function openPort() {
 	if (isPortOpen) {
 		return;
@@ -45,13 +47,16 @@ function openPort() {
 		}
 		isPortOpen = true;
 		console.log("Port open :)")
-
-		setInterval(function() {
-			requestReading()
-		}, 2000);
-
+		requestReading();
 	});
 }
+
+
+setInterval(function() {
+	requestReading()
+}, 2000);
+
+
 
 function requestReading() {
 	if (!isPortOpen) {
@@ -60,8 +65,6 @@ function requestReading() {
 	}
 	port.write('LPS 0 1\n')
 }
-
-openPort();
 
 port.on('close', function(err) {
 	isPortOpen = false;

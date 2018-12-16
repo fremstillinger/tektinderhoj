@@ -97,7 +97,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.test = $routeParams;
 	$scope.openWebsocket();
-	$scope.parametre = ['temp', 'vind', 'uv', 'fugt'];
+	$scope.parametre = ['volt','vind','temp','uv', 'fugt'];
 
 	if ($routeParams.parametre != undefined) {
 		$scope.parametre = $routeParams.parametre.split(",");
