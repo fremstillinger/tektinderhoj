@@ -208,8 +208,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 					}
 
 					self.series = [readingTypeName];
-					this.isLoading = false;
-					
+					self.isLoading = false;
+
 					self.options = {
 						maintainAspectRatio: false,
 						fill: false,
