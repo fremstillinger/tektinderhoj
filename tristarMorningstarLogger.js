@@ -26,9 +26,9 @@ var v_scale = 96.667 * 2 ** (-15);
 var ampScale = 66.667 * 2 ** (-15);
 
 function doReading() {
-
-    client.readHoldingRegisters(0, 20, function(err, data) {
-     
+  
+    client.readHoldingRegisters(0, 50, function(err, data) {
+           
         if (data != undefined) {
 
             for (var i = 0; i < readingTypes.length; i++) {
@@ -38,7 +38,7 @@ function doReading() {
                     var value = data.data[readingIndex];
                   
                     eval(rt.readingConversion);
-            
+                    console.log(value);
                     apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value);
                 }
             }
