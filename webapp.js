@@ -54,7 +54,22 @@ setup websocket for live data
 var livedata = [];
 var websocketClients = [];
 
-const wss = new WebSocket.Server({ port: configData.websocketPort});
+
+// read ssl certificate
+
+var privateKey = fs.readFileSync(configData.privatekeyPath, 'utf8');
+var certificate = fs.readFileSync(configData.fullchainPath, 'utf8');
+
+var credentials = { key: privateKey, cert: certificate };
+var https = require('https');
+
+//pass in your credentials to create an https server
+var httpsServer = https.createServer(credentials);
+httpsServer.listen(configData.websocketPort);
+
+
+const wss = new WebSocket.Server({ server: httpsServer});
+
 
 wss.on('connection', function connection(ws) {
 	websocketClients.push(ws);
