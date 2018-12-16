@@ -31,8 +31,6 @@ function doReading() {
      
         if (data != undefined) {
 
-
-
             for (var i = 0; i < readingTypes.length; i++) {
                 var rt = readingTypes[i];
                 if (rt.deviceType == "tristar") {
@@ -45,32 +43,6 @@ function doReading() {
                 }
             }
 
-
-
-            //console.log("Battery voltage, filtered (τ ≈ 2.5s)",data.data[0]*v_scale);
-
-
-            /*
-        	console.log("Battery voltage, filtered (τ ≈ 2.5s)",data.data[0]*v_scale);
-
-
-        	console.log("Battery sense voltage, filtered (τ ≈ 2.5s)",data.data[1]*v_scale);
-        	var a_scale = 139.15*2**(-15);
-
-        	console.log("Array/Load voltage, filtered (τ ≈ 2.5s)",data.data[2]*v_scale);
-        	console.log("Charging current, filtered (τ ≈ 2.5s):",data.data[3]*ampScale);
-        	var a_sca = 316.67 *2**(-15);
-        	console.log("Load current, filtered (τ ≈ 2.5s):",data.data[4]*a_sca);
-
-        	console.log("Battery voltage, slow filter (τ ≈ 25s):",data.data[5]*v_scale);
-        	console.log("Heatsink temperature:",data.data[6]);
-
-        	console.log("Ah_t_HI:",data.data[11]*0.1);
-        	console.log("State:",data.data[18]);
-        	console.log("control_state:",data.data[19]);
-        	       
-            */
-            //readAmp();
         }
     });
 }
