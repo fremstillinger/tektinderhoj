@@ -97,6 +97,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.test = $routeParams;
 	$scope.openWebsocket();
+
 	$scope.parametre = ['volt','vind','temp','uv', 'fugt'];
 
 	if ($routeParams.parametre != undefined) {
@@ -244,12 +245,21 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$scope.reloadChartdata();
 	}
 
+	$scope.reloadTimeout;
+
 	$scope.reloadChartdata = function() {
-		$scope.updateEmbedcode();
+		clearTimeout($scope.reloadTimeout);
+
+		$scope.reloadTimeout; = setTimeout(function(){
+			$scope.updateEmbedcode();
 		$scope.charts = [];
 		angular.forEach($scope.parametre, function(value, key) {
 			$scope.charts.push(new $scope.chartController(value));
 		});
+
+		},100)
+		
 	}
+
 	$scope.reloadChartdata();
 }]);
