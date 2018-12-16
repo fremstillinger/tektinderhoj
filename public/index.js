@@ -164,6 +164,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		var self = this;
 		this.name = name;
 
+		this.isLoading = true;
+
 		this.colors = [{
 			//backgroundColor:"#330",
 			//hoverBackgroundColor:"#FF0000",
@@ -195,6 +197,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			})
 			.then(function(res) {
 				$timeout(function() {
+					
+
 					var readingTypeName = "";
 					for (var i = 0; i < res.data.data.rows.length; i++) {
 						//var d = new Date(res.data.data[i].readingDate);
@@ -204,7 +208,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 					}
 
 					self.series = [readingTypeName];
-
+					this.isLoading = false;
+					
 					self.options = {
 						maintainAspectRatio: false,
 						fill: false,
