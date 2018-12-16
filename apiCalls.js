@@ -11,7 +11,7 @@ var isWebsocketOpen = false;
 function openWecsocket() {
 	var wsPath = 'wss://' + configData.apiadress + ':' + configData.websocketPort;
 	try {
-		ws = new WebSocket(wsPath);
+		ws = new WebSocket(wsPath,{ rejectUnauthorized: false});
 	} catch (e) {
 		console.log(e, wsPath);
 	}
@@ -20,7 +20,8 @@ function openWecsocket() {
 		isWebsocketOpen = true;
 	});
 
-	ws.on('error', function() {
+	ws.on('error', function(e) {
+
 		console.log("websocket error", wsPath)
 		
 		isWebsocketOpen = true;
