@@ -250,7 +250,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	$scope.reloadChartdata = function() {
 		clearTimeout($scope.reloadTimeout);
 
-		$scope.reloadTimeout; = setTimeout(function(){
+		$scope.reloadTimeout = setTimeout(function(){
 			$scope.updateEmbedcode();
 		$scope.charts = [];
 		angular.forEach($scope.parametre, function(value, key) {
