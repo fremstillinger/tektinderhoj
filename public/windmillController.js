@@ -174,7 +174,7 @@ $scope.windmillWingStage.scale = 1;
 
 		if(!$scope.batteryCharging){
 			//console.log(parseInt($scope.batteryLevel * 255));
-			var url = 'http://luckmann.local:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
+			var url = 'http://localhost:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
 			
 			$http.get(url).then(function(res) {
 			
