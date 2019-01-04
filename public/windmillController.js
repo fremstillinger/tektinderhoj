@@ -189,7 +189,7 @@ $scope.windmillWingStage.scale = 1;
     }, $scope.updateInterval);
 
     $scope.updateLights = function(){
-    	var url = 'http://localhost:8282/setColor/25/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
+    	var url = 'http://localhost:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
 			
 			$http.get(url).then(function(res) {
 			
