@@ -16,24 +16,44 @@ html, body {
 <!--
 <div  style="background-color:#a1c436; position:relative; z-index: 10; bottom: 0px;left:0px; width:100%; height:300px;"></div>
 -->
-<div class="row">
-		<div class="col-md-3 unit" ng-repeat="liveParam in liveDataParameters">
-		<p  ng-bind="liveParam.readingTypeName"></p>
-		<h2 class="u" ng-bind="liveParam.value"></h2><p class="u" ng-bind="liveParam.unit"></p>
-        </div>
-	</div>
-<div>
+
 
 <div class="row">
 	<div class="col-md-6">
-    	<canvas id="batteryCanvas" width="600" height="300"></canvas>
+
+		<svg height="220" width="220">
+
+			  <style>
+    .small { font: regular 13px sans-serif;fill:#306a45; }
+    .heavy { font: bold 40px sans-serif;fill:#306a45; }
+
+  </style>
+
+
+
+ 		 <circle cx="110" cy="110" r="100" stroke="#a1c436" stroke-width="3" fill="none" />
+   			<text x="110" y="120" text-anchor="end"  class="heavy">{{windSpeed}}</text>
+   			<text x="110" y="102" text-anchor="start"  class="small">M/s</text>
+   			 <g transform="translate(110,110)">
+   				
+	<path fill="#306a45" id="inner-arrow" d="M2.3-56.3l12.1,6.7L0.6-81.2l-13.8,31.6l12.1-6.7"/>
+   			 </g>
+		</svg>
+
+
 	</div>
+
+
+    
 	<div class="col-md-6">
-		<div class="row">
-			<div class="col-md-12">
 		<canvas id="windmillWingCanvas" width="400" height="400"></canvas>
 	</div>
+</div>
+
+
+<div class="row">
 	<div class="col-md-12">
+		<canvas id="batteryCanvas" width="600" height="300"></canvas>
     	<canvas id="windmillCanvas" width="400" height="400"></canvas>
     </div>
 	</div>

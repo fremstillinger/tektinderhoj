@@ -3,8 +3,9 @@
 app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$interval', '$location', '$window', function($scope, $routeParams, $route, $http, $timeout, $interval,$location, $window) {
 
 	$scope.windSpeed = 0;
+	$scope.windDirection = 0;
 
-	$scope.parametre = ['volt','vind'];
+	$scope.parametre = ['vindret','vind'];
 	$scope.readingTypes = [];
 
 	$http.get(configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
@@ -60,8 +61,15 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 							obj.value = $scope.liveData[l].value;
 							obj.readingDate = $scope.liveData[l].readingDate;
 
-								if($scope.readingTypes[r].readingTypeID == 2){
+								if($scope.readingTypes[r].shortname == "vind"){
 									$scope.windSpeed = $scope.liveData[l].value;
+								}
+
+								if($scope.readingTypes[r].shortname == "vindret"){
+									$scope.windDirection = $scope.liveData[l].value;
+									  var innerArrow = document.getElementById("inner-arrow");
+    innerArrow.setAttribute("transform", "rotate(" + $scope.windDirection  + ")");
+
 								}
 						}
 					}
@@ -104,8 +112,9 @@ $scope.windmillWingStage.scale = 1;
 	windmill.scale =1;
 
     var windmillTower = new createjs.Bitmap("./img/vindmolle-01.png");
-    windmillTower.x = 60;
-     windmillTower.y = 0;
+    windmillTower.x = 180;
+    windmillTower.y = 0;
+    windmillTower.scale = 0.2;
    	windmill.addChild(windmillTower);
    	$scope.windmillStage.addChild(windmill)
     
@@ -180,7 +189,7 @@ $scope.windmillWingStage.scale = 1;
     }, $scope.updateInterval);
 
     $scope.updateLights = function(){
-    	var url = 'http://localhost:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
+    	var url = 'http://localhost:8282/setColor/25/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
 			
 			$http.get(url).then(function(res) {
 			
