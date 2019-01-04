@@ -22,6 +22,11 @@ app.config(function($routeProvider) {
 			controller: "chartCtrl",
 			reloadOnSearch: false
 		})
+		.when("/vindmolle", {
+			templateUrl: "windmill.html",
+			controller: "windmillCtrl",
+			reloadOnSearch: false
+	})
 });
 
 
