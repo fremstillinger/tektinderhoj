@@ -112,7 +112,7 @@ $scope.windmillWingStage.scale = 1;
 	windmill.scale =1;
 
     var windmillTower = new createjs.Bitmap("./img/vindmolle-01.png");
-    windmillTower.x = 180;
+    windmillTower.x = 170;
     windmillTower.y = 0;
     windmillTower.scale = 0.2;
    	windmill.addChild(windmillTower);
