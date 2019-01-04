@@ -61,7 +61,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 							obj.readingDate = $scope.liveData[l].readingDate;
 
 								if($scope.readingTypes[r].readingTypeID == 2){
-									//$scope.windSpeed = $scope.liveData[l].value;
+									$scope.windSpeed = $scope.liveData[l].value;
 								}
 						}
 					}
@@ -71,7 +71,6 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 		}
 	}
 
-	$scope.windSpeed = 10;
 	$scope.windmillStage = new createjs.Stage("windmillCanvas");
 	$scope.windmillWingStage = new createjs.Stage("windmillWingCanvas");
 	$scope.batteryStage = new createjs.Stage("batteryCanvas");
@@ -154,7 +153,7 @@ $scope.windmillWingStage.scale = 1;
 
 
 		if($scope.batteryCharging){
-			$scope.batteryLevel += ($scope.windmillRotation / 18) * 0.1;
+			$scope.batteryLevel += ($scope.windmillRotation / 18) * 0.01;
 
 			if($scope.batteryLevel >= 1){
 				$scope.batteryLevel = 1;
@@ -163,7 +162,7 @@ $scope.windmillWingStage.scale = 1;
 
 		}
 		else{
-			$scope.batteryLevel  -=0.001;
+			$scope.batteryLevel  -=0.01;
 
 			if($scope.batteryLevel <= 0){
 				$scope.batteryLevel = 0;
