@@ -168,6 +168,9 @@ $scope.windmillWingStage.scale = 1;
 				$scope.batteryLevel = 1;
 				$scope.batteryCharging = false;
 				 $scope.updateLights();
+				 	$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
+				 	$http.get('http://localhost:8282/setColor/11/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0');
+
 			}	
 
 		}
@@ -178,6 +181,8 @@ $scope.windmillWingStage.scale = 1;
 				$scope.batteryLevel = 0;
 				 $scope.updateLights();
 				 $http.get('http://localhost:8282/stopRun/0/10/255/255/0/50');
+				 $http.get('http://localhost:8282/setColor/11/100/0/0/0');
+
 				$scope.batteryCharging = true;
 			}
 		}
@@ -190,8 +195,7 @@ $scope.windmillWingStage.scale = 1;
     }, $scope.updateInterval);
 
     $scope.updateLights = function(){
-			$http.get('http://localhost:8282/setColor/11/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0');
-			$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
+		
 
     }
 	$scope.tick = function(){		
