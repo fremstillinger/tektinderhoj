@@ -158,6 +158,7 @@ $scope.windmillWingStage.scale = 1;
 			if($scope.batteryLevel >= 1){
 				$scope.batteryLevel = 1;
 				$scope.batteryCharging = false;
+				 $scope.updateLights();
 			}	
 
 		}
@@ -166,23 +167,25 @@ $scope.windmillWingStage.scale = 1;
 
 			if($scope.batteryLevel <= 0){
 				$scope.batteryLevel = 0;
+				 $scope.updateLights();
 				$scope.batteryCharging = true;
 			}
 		}
 	
 
 		if(!$scope.batteryCharging){
-			//console.log(parseInt($scope.batteryLevel * 255));
-			var url = 'http://localhost:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
 			
-			$http.get(url).then(function(res) {
-			
-			});
 			
 		}
     }, $scope.updateInterval);
 
-
+    $scope.updateLights = function(){
+    	var url = 'http://localhost:8282/setColor/0/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0';
+			
+			$http.get(url).then(function(res) {
+			
+			});
+    }
 	$scope.tick = function(){		
 		$scope.windmillWings.rotation += $scope.windmillRotation;
 		$scope.batteryLevelRect.scaleX = $scope.batteryLevel;
