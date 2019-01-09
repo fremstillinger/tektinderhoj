@@ -1,6 +1,6 @@
 
 
-app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$interval', '$location', '$window', function($scope, $routeParams, $route, $http, $timeout, $interval,$location, $window) {
+app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout','$interval', '$location', '$window','$document', function($scope, $routeParams, $route, $http, $timeout, $interval,$location, $window,$document) {
 
 	$scope.windSpeed = 0;
 	$scope.windDirection = 0;
@@ -62,13 +62,15 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 							obj.readingDate = $scope.liveData[l].readingDate;
 
 								if($scope.readingTypes[r].shortname == "vind"){
-									$scope.windSpeed = $scope.liveData[l].value;
+									if(!$scope.simulationMode){
+										$scope.windSpeed = $scope.liveData[l].value;
+									}
 								}
 
 								if($scope.readingTypes[r].shortname == "vindret"){
-									$scope.windDirection = $scope.liveData[l].value;
+									  $scope.windDirection = $scope.liveData[l].value;
 									  var innerArrow = document.getElementById("inner-arrow");
-    innerArrow.setAttribute("transform", "rotate(" + $scope.windDirection  + ")");
+    								  innerArrow.setAttribute("transform", "rotate(" + $scope.windDirection  + ")");
 
 								}
 						}
@@ -82,11 +84,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 	$scope.windmillStage = new createjs.Stage("windmillCanvas");
 	$scope.windmillWingStage = new createjs.Stage("windmillWingCanvas");
 	$scope.batteryStage = new createjs.Stage("batteryCanvas");
-$scope.windmillWingStage.scale = 1;
-	//$scope.wingsStage = new createjs.Stage("windmillWingsCanvas");
+	$scope.windmillWingStage.scale = 1;
 	$scope.curRotation = 0;
-
-
 	$scope.windmillWings  =  new createjs.Bitmap("./img/vindmollevinger250.png");
 
 	var wingSize = 250;
@@ -146,12 +145,12 @@ $scope.windmillWingStage.scale = 1;
 	$scope.updateWindmillPosition();
 
 	$scope.updateInterval =1000/25;
-
-
 	$scope.batteryCharging = true; 
+	$scope.simulationMode = false;
+
 
     setInterval(function(){
-    	var acc = 1;
+    	var acc = 0.5;
 
 		if($scope.windSpeed > $scope.windmillRotation){
 			$scope.windmillRotation +=acc;
@@ -181,11 +180,10 @@ $scope.windmillWingStage.scale = 1;
 				 $scope.updateLights();
 				 $http.get('http://localhost:8282/stopRun/0/10/255/255/0/50');
 				 $http.get('http://localhost:8282/setColor/11/100/0/0/0');
-
 				$scope.batteryCharging = true;
 			}
 		}
-	
+		
 
 		if(!$scope.batteryCharging){
 			
@@ -193,18 +191,54 @@ $scope.windmillWingStage.scale = 1;
 		}
     }, $scope.updateInterval);
 
+    $document.bind('keyup', function (e) {
+    
+    switch(e.keyCode){
+    	case 82:
+    	$window.location.reload();
+    	break;
+
+    	case 65:
+    	$scope.startSimulationmode();
+    	$scope.windSpeed +=1;
+    	 $scope.$apply();
+    	break;
+
+    	case 90:
+    	$scope.startSimulationmode();
+    	$scope.windSpeed -=1;
+    	 $scope.$apply();
+    	break;
+    	
+    }
+	});
+
+    $scope.simulationModeTimeout; 
+    $scope.blinkMode = false;
+
+    $scope.blinkInterval = setInterval(function(){
+    		 $scope.blinkMode = ! $scope.blinkMode;
+    		 $scope.$apply();
+    	},500);
+
+    $scope.startSimulationmode = function(){	
+    	$scope.simulationMode = true;
+    	clearTimeout($scope.simulationModeTimeout);
+    	 $scope.simulationModeTimeout = setTimeout(function(){
+    	 	$scope.simulationMode = false;
+    	 },10000);
+    }
+
     $scope.updateLights = function(){
 		
 
     }
 	$scope.tick = function(){		
-		$scope.windmillWings.rotation += $scope.windmillRotation;
+		$scope.windmillWings.rotation += $scope.windmillRotation*2;
 		$scope.batteryLevelRect.scaleX = $scope.batteryLevel;
 		$scope.windmillWingStage.update();
 		$scope.batteryStage.update();
-		$scope.windmillStage.update();
-		
-			//$scope.batteryStage.update();
+		$scope.windmillStage.update();	
 	}
 
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
