@@ -169,7 +169,7 @@ $scope.windmillWingStage.scale = 1;
 				$scope.batteryCharging = false;
 				 $scope.updateLights();
 				 	$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
-				 	$http.get('http://localhost:8282/setColor/11/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0');
+				 	$http.get('http://localhost:8282/setColor/11/200/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0');
 			}	
 
 		}
