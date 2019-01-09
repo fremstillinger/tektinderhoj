@@ -87,9 +87,9 @@ $scope.windmillWingStage.scale = 1;
 	$scope.curRotation = 0;
 
 
-	$scope.windmillWings  =  new createjs.Bitmap("./img/vindmollevinger400.png");
+	$scope.windmillWings  =  new createjs.Bitmap("./img/vindmollevinger250.png");
 
-	var wingSize = 400;
+	var wingSize = 250;
 	$scope.windmillWings.regX = wingSize/2;
 	$scope.windmillWings.regY = wingSize/2;
 	$scope.windmillWings.x = wingSize/2;
@@ -112,7 +112,7 @@ $scope.windmillWingStage.scale = 1;
 	windmill.scale =1;
 
     var windmillTower = new createjs.Bitmap("./img/vindmolle-01.png");
-    windmillTower.x = 170;
+    windmillTower.x = 10;
     windmillTower.y = 0;
     windmillTower.scale = 0.2;
    	windmill.addChild(windmillTower);
@@ -170,7 +170,6 @@ $scope.windmillWingStage.scale = 1;
 				 $scope.updateLights();
 				 	$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
 				 	$http.get('http://localhost:8282/setColor/11/100/' + parseInt($scope.batteryLevel * 255) + '/' + parseInt($scope.batteryLevel * 255) + '/0');
-
 			}	
 
 		}
