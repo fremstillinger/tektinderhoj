@@ -113,7 +113,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     var windmillTower = new createjs.Bitmap("./img/vindmolle-01.png");
     windmillTower.x = 0;
     windmillTower.y = 0;
-    windmillTower.scale = 0.5;
+    windmillTower.scale = 0.4;
    	windmill.addChild(windmillTower);
    	$scope.windmillStage.addChild(windmill)
     
