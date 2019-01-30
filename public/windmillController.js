@@ -120,18 +120,6 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     $scope.windmillWingStage.addChild($scope.windmillWings);
 
     $scope.updateWindmillPosition = function(){
-    	/*
-    	$scope.stage.canvas.height =$(window).innerHeight();
-    	$scope.stage.canvas.width = $(window).innerWidth();
-    	windmill.x =  $(window).innerWidth()-300;
-    	windmill.y = 250;
-    	$scope.windmillBackground.y = $scope.stage.canvas.height-200;
-    	$scope.windmillBackground.scaleX = $scope.stage.canvas.width;
-    	$scope.batteryLevelRect.scaleX =  $(window).innerWidth();
-    	$scope.battery.y = $scope.stage.canvas.height-200;
-    	$scope.battery.x = 50;
-    	$scope.battery.scaleX = $scope.battery.scaleY = 0.3;
-    	*/
     	$scope.windmillWingStage.update();
     	$scope.windmillStage.update();
     	$scope.batteryStage.update();
@@ -147,7 +135,6 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 	$scope.updateInterval =1000/25;
 	$scope.batteryCharging = true; 
 	$scope.simulationMode = false;
-
 
     setInterval(function(){
     	var acc = 0.5;
@@ -184,7 +171,6 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 			}
 		}
 		
-
 		if(!$scope.batteryCharging){
 			
 			
@@ -195,7 +181,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     
     switch(e.keyCode){
     	case 82:
-    	$window.location.reload();
+    	//$window.location.reload();
+    	$scope.stopSimulationmode();
     	break;
 
     	case 65:
@@ -221,12 +208,18 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     		 $scope.$apply();
     	},500);
 
+
+    $scope.stopSimulationmode = function(){
+		$scope.simulationMode = false;
+
+    }
+
     $scope.startSimulationmode = function(){	
     	$scope.simulationMode = true;
     	clearTimeout($scope.simulationModeTimeout);
     	 $scope.simulationModeTimeout = setTimeout(function(){
     	 	$scope.simulationMode = false;
-    	 },10000);
+    	 },30000);
     }
 
     $scope.updateLights = function(){
