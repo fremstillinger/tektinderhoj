@@ -181,7 +181,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     
     switch(e.keyCode){
     	case 82:
-    	//$window.location.reload();
+    
     	$scope.stopSimulationmode();
     	break;
 
@@ -196,6 +196,12 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     	$scope.windSpeed -=1;
     	 $scope.$apply();
     	break;
+
+    		case 73:
+    $window.location.reload();
+    	break;
+
+  
     	
     }
 	});
