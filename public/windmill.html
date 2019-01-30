@@ -38,7 +38,7 @@ footer {
 <div class="row">
 	<div class="col-md-6">
 
-		<svg height="220" width="220">
+		<svg height="220" style="" width="220">
 
 			  <style>
     .small { font: regular 13px sans-serif;fill:#306a45; }
@@ -49,9 +49,8 @@ footer {
  		 	<text x="110" y="140" text-anchor="middle"  class="small">{{(simulationMode && blinkMode)? "Simuleret \nvindhastighed" : ""}}</text>
    			<text x="120" y="120" text-anchor="end"  class="heavy">{{windSpeed}}</text>
    			<text x="120" y="102" text-anchor="start"  class="small">M/s</text>
-   			 <g transform="translate(110,110)">
-   				
-	<path fill="#306a45" id="inner-arrow" d="M2.3-56.3l12.1,6.7L0.6-81.2l-13.8,31.6l12.1-6.7"/>
+   			 <g transform="translate(110,110)">	
+			<path fill="#306a45" id="inner-arrow" d="M2.3-56.3l12.1,6.7L0.6-81.2l-13.8,31.6l12.1-6.7"/>
    			 </g>
 		</svg>
 
@@ -65,12 +64,12 @@ footer {
 
  	<div class="row">
 		<div class="col-md-6">
-		<canvas id="batteryCanvas" style="position:absolute;" width="600" height="220"></canvas>
+		<canvas id="batteryCanvas" width="600" height="220"></canvas>
 	</div>
 
 	<div class="col-md-6" >
-		<canvas id="windmillWingCanvas" style="position:absolute; top:-325px; left:125px;" width="250" height="250"></canvas>
-		<canvas id="windmillCanvas" width="80" style="position:absolute; top:-205px; left:210px;" height="600"></canvas>
+		<canvas id="windmillWingCanvas" style="position:absolute; top:-725px; left:125px;" width="250" height="250"></canvas>
+		<canvas id="windmillCanvas" width="100" style="position:absolute; top:-605px; left:177px;" height="800"></canvas>
 	</div>
 
 </div>
