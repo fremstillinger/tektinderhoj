@@ -154,8 +154,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 				$scope.batteryLevel = 1;
 				$scope.batteryCharging = false;
 				 	$scope.updateLights();
-				 	//$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
-				 	//$http.get('http://localhost:8282/setColor/11/400/80/40/0');
+				 	$http.get('http://localhost:8282/startRun/0/10/255/255/0/50');
+				 	$http.get('http://localhost:8282/setColor/11/400/80/40/0');
 			}	
 		}
 		else{
@@ -164,8 +164,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 			if($scope.batteryLevel <= 0){
 				$scope.batteryLevel = 0;
 				 $scope.updateLights();
-				 //$http.get('http://localhost:8282/stopRun/0/10/255/255/0/50');
-				 //$http.get('http://localhost:8282/setColor/11/400/0/0/0');
+				 $http.get('http://localhost:8282/stopRun/0/10/255/255/0/50');
+				 $http.get('http://localhost:8282/setColor/11/400/0/0/0');
 				$scope.batteryCharging = true;
 			}
 		}
