@@ -22,6 +22,10 @@ app.config(function($routeProvider) {
 			controller: "chartCtrl",
 			reloadOnSearch: false
 		})
+		.when("/omforhal", {
+			templateUrl: "aboutWindmill.html",
+		
+		})
 		.when("/vindmolle", {
 			templateUrl: "windmill.html",
 			controller: "windmillCtrl",
