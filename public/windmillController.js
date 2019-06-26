@@ -164,7 +164,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 			if($scope.batteryLevel <= 0){
 				$scope.batteryLevel = 0;
 				 $scope.updateLights();
-				 $http.get('http://localhost:8282/stopRun/0/77/255/255/0/50');
+				 $http.get('http://localhost:8282/stopRun/0/77/255/255/0/60');
 				 $http.get('http://localhost:8282/setColor/78/500/0/0/0');
 				$scope.batteryCharging = true;
 			}
