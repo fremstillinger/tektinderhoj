@@ -186,14 +186,18 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     	case 65:
     	$scope.startSimulationmode();
-    	$scope.windSpeed +=1;
+    	if($scope.windSpeed < 39){
+    		$scope.windSpeed +=1;
+    	}
     	 $scope.$apply();
     	break;
 
     	case 90:
     	$scope.startSimulationmode();
-    	$scope.windSpeed -=1;
-    	 $scope.$apply();
+    	if($scope.windSpeed >0){
+    		$scope.windSpeed -=1;
+    	}
+    	$scope.$apply();
     	break;
 
     		case 73:
