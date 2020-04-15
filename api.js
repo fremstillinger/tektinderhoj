@@ -171,7 +171,7 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 
-			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName,readingTypes.unit FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
+			var query = 'SELECT ' + groupBy + '  as scale, readings.readingDate,readingTypes.readingTypeName,ROUND(AVG(readings.value),1) as value,readings.value as origValue,sources.sourceName,readingTypes.unit FROM readings LEFT JOIN sources ON sources.sourceID = readings.sourceID LEFT JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? AND readingDate BETWEEN ? AND ? GROUP BY scale ORDER BY readingDate ';
 
 			db.query(query, [req.params.readingTypeShortName, startDate.toDate(), endDate.toDate()], function(err, rows, fields) {
 
@@ -206,7 +206,7 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 
-			var query = 'SELECT readings.readingDate,readingTypes.readingTypeName,readingTypes.shortname,readings.value,sources.sourceName,readingTypes.unit  FROM readings INNER JOIN sources ON sources.sourceID = readings.sourceID INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? ORDER BY readingDate DESC  LIMIT 0,1';
+			var query = 'SELECT readings.readingDate,readingTypes.readingTypeName,readingTypes.shortname,readings.value,sources.sourceName,readingTypes.unit  FROM readings LEFT JOIN sources ON sources.sourceID = readings.sourceID LEFT JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID WHERE readingTypes.shortname=? ORDER BY readingDate DESC  LIMIT 0,1';
 
 			db.query(query, [req.params.readingTypeShortName], function(err, rows, fields) {
 
