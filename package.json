@@ -23,7 +23,7 @@
     "request": "^2.87.0",
     "serialport": "^6.2.1",
     "ws": "^5.2.2",
-    "xlsx": "^0.12.13"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {},
   "repository": {
