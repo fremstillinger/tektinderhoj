@@ -20,6 +20,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
 
 	$scope.openWebsocket = function() {
+	//alert(configData.wsAdress);
 
 		var connection = new WebSocket(configData.wsAdress);
 
@@ -37,9 +38,11 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 		
 			$timeout(function() {
 				$scope.liveData = JSON.parse(e.data);
+				//alert(e.data);
+
 			
 				$scope.updateLiveData();
-			}, 0);
+			}, 10);
 		};
 	}
 
@@ -157,7 +160,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
 				 	$http.get('http://localhost:8282/startRun/0/92/255/255/0/80');
 				 	
-				 	$http.get('http://localhost:8282/setColor/93/500/80/40/0');
+				 	$http.get('http://localhost:8282/setColor/93/499/40/20/0');
 			}	
 		}
 		else{
@@ -168,7 +171,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 				 $scope.updateLights();
 				 $http.get('http://localhost:8282/stopRun/0/92/255/255/0/80');
 
-				 $http.get('http://localhost:8282/setColor/93/500/0/0/0');
+				 $http.get('http://localhost:8282/setColor/93/499/0/0/0');
 				$scope.batteryCharging = true;
 			}
 		}

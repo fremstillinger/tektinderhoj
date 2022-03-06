@@ -73,6 +73,7 @@ const wss = new WebSocket.Server({ server: httpsServer});
 
 wss.on('connection', function connection(ws) {
 	websocketClients.push(ws);
+console.log("connection established");
 	sendToAllClients(livedata);
 	ws.on("message",function(data){
 
