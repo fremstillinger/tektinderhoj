@@ -30,7 +30,6 @@ function updateReadingTypes() {
 };
 
 updateReadingTypes();
-
 openPort();
 
 function openPort() {
@@ -47,15 +46,21 @@ function openPort() {
 		}
 		isPortOpen = true;
 		console.log("Port open :)")
-		requestReading();
+		
 	});
 }
 
+var timeAtLastDataDump = new Date();
+var checkInterval = 10;
 
 setInterval(function() {
-	requestReading()
-}, 2000);
-
+	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
+	console.log("time since last data dump",secondsSinceLastDataDump);
+	
+	
+		requestReading();
+	
+}, 5000);
 
 
 function requestReading() {
@@ -63,7 +68,7 @@ function requestReading() {
 		console.log("port not open")
 		return;
 	}
-	port.write('LPS 0 1\n')
+	port.write('LOOP 1\n')
 }
 
 port.on('close', function(err) {
@@ -76,19 +81,19 @@ port.on('close', function(err) {
 // on data received from Davis USB logger
 
 port.on('data', function(data) {
+	timeAtLastDataDump = new Date();
 	
-
 	if (data.length != 100) {
+		console.log("data corrupted")
 		return;
 	}
 
 	if (data.toString("hex", 0, 1) != "06") {
+console.log("data does not begin with 06");
 		return;
 	}
 
 	data = data.slice(1, 99);
-
-
 
 	for (var i = 0; i < readingTypes.length; i++) {
 
@@ -106,9 +111,16 @@ port.on('data', function(data) {
 		}
 
 		var value = parseInt(hexCombined);
+
+		
+	
 		eval(readingTypes[i].readingConversion);
+
+		console.log(readingTypes[i].readingTypeName,value);
+
 
 		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
 	}
+
 })

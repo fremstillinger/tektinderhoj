@@ -7,10 +7,13 @@ var saveData = true;
 var ws = null;
 var isWebsocketOpen = false;
 
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 
 function openWecsocket() {
 	var wsPath = 'wss://' + configData.apiadress + ':' + configData.websocketPort;
 	try {
+console.log("websocket connected");
 		ws = new WebSocket(wsPath,{ rejectUnauthorized: false});
 	} catch (e) {
 		console.log(e, wsPath);
@@ -40,15 +43,17 @@ openWecsocket();
 
 
 exports.getReadingTypes = function(callback) {
-	var url = "http://" + configData.apiadress + ":" + configData.port + "/api/get/readingTypes/";
-
+	var url = "https://" + configData.apiadress + "/api/get/readingTypes/";
+	console.log(url);
 	request(url, function(error, response, body) {
 		if (error != null) {
+console.log(error);
 			setTimeout(function() {
 				exports.getReadingTypes(callback)
 			}, 5000);
 			return;
 		}
+
 
 		readingTypes = JSON.parse(body).data;
 
@@ -73,7 +78,7 @@ exports.logData = function(readingTypeID, sourceID, value) {
 	}
 
 	if (saveData) {
-		var url = "http://" + configData.apiadress + ":" + configData.port + "/api/insert/reading/";
+		var url = "https://" + configData.apiadress + "/api/insert/reading/";
 		request.post({
 				url: url,
 				form: jsonData

@@ -38,7 +38,7 @@ function doReading() {
                     var value = data.data[readingIndex];
                   
                     eval(rt.readingConversion);
-                    console.log(value);
+                    
                     apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value);
                 }
             }
