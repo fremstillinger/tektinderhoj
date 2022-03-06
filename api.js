@@ -193,6 +193,38 @@ module.exports = function(app, dbPool) {
 	});
 
 
+	/**
+	 * Get latest reading by readingTypeID
+	 */
+
+
+	app.get('/api/get/latestReadingByReadingTypeID/:readingTypeID', (req, res) => {
+
+		dbPool.getConnection(function(err, db) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			var query = 'SELECT *  FROM readings WHERE readingTypeID=? ORDER BY readingDate DESC LIMIT 0,1';
+
+			db.query(query, [req.params.readingTypeID], function(err, rows, fields) {
+
+				db.release();
+				if (err) {
+					sendData(res, 0, err);
+				} else {
+					var obj = {
+						fields: fields,
+						rows: rows
+					}
+					sendData(res, true, obj);
+				}
+			});
+		})
+	});
+
+
 
 	/**
 	 * Get latest reading by shortname
