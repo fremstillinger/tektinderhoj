@@ -236,7 +236,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
                 break;
 
             case 73:
-                $window.location.reload();
+                //$window.location.reload();
                 break;
 
 
