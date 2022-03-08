@@ -82,6 +82,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 	$scope.updateLiveData = function() {
+			console.log("update live data");
 		$scope.liveDataParameters = [];
 
 		for (var p = 0; p < $scope.parametre.length; p++) {

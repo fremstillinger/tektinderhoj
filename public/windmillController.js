@@ -47,7 +47,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     $scope.requestWindSpeedFromDatabase = function() {
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/2').then(function(res) {
-            console.log("database windspeed", res.data.data.rows[0].value)
+          
             if (!$scope.simulationMode) {
                 $scope.windSpeed = res.data.data.rows[0].value;
             }
@@ -56,14 +56,13 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
 
-   // $scope.requestWindSpeedFromDatabase();
+    $scope.requestWindSpeedFromDatabase();
     setInterval($scope.requestWindSpeedFromDatabase, 1000 * 30);
 
 
 
     $scope.requestWindSHeadingFromDatabase = function() {
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/7').then(function(res) {
-            console.log("database windspeed", res.data.data.rows[0].value)
             if (!$scope.simulationMode) {
                 $scope.windDirection = res.data.data.rows[0].value;
                 var innerArrow = document.getElementById("inner-arrow");
@@ -163,9 +162,10 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     $(window).resize(function() {
         $scope.updateWindmillPosition();
     });
+
     $scope.updateWindmillPosition();
 
-    $scope.updateInterval = 1000 / 25;
+    $scope.updateInterval = 1000 / 12;
     $scope.batteryCharging = true;
     $scope.simulationMode = false;
 
@@ -178,7 +178,6 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
         if ($scope.windSpeed < $scope.windmillRotation) {
             $scope.windmillRotation -= acc;
         }
-
 
         if ($scope.batteryCharging) {
             $scope.batteryLevel += ($scope.windmillRotation / 18) * 0.01;
@@ -260,7 +259,9 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     $scope.startSimulationmode = function() {
         $scope.simulationMode = true;
+        
         clearTimeout($scope.simulationModeTimeout);
+
         $scope.simulationModeTimeout = setTimeout(function() {
             $scope.simulationMode = false;
         }, 30000);
@@ -279,7 +280,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-    createjs.Ticker.framerate = 25;
+    createjs.Ticker.framerate = 12;
     createjs.Ticker.on("tick", $scope.tick);
 
 }]);
