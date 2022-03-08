@@ -16,7 +16,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     $scope.batteryLevel = 0;
 
-
+    /*
     $scope.openWebsocket = function() {
       
 
@@ -43,6 +43,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
     $scope.openWebsocket();
+    */
 
     $scope.requestWindSpeedFromDatabase = function() {
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/2').then(function(res) {
