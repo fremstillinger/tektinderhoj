@@ -41,7 +41,7 @@ app.use('/', express.static(__dirname + '/public'));
 
 require('./api')(app, dbPool);
 
-app.listen(configData.port,"127.0.0.1", () => {
+app.listen(configData.port,() => {
 	console.log('We are live on ' + configData.port);
 });
 
