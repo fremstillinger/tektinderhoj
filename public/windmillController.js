@@ -56,7 +56,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
 
-    $scope.requestWindSpeedFromDatabase();
+    //$scope.requestWindSpeedFromDatabase();
     setInterval($scope.requestWindSpeedFromDatabase, 1000 * 30);
 
 
@@ -74,8 +74,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
 
-    $scope.requestWindSHeadingFromDatabase();
-    setInterval($scope.requestWindSHeadingFromDatabase, 1000 * 15);
+    //$scope.requestWindSHeadingFromDatabase();
+    setInterval($scope.requestWindSHeadingFromDatabase, 1000 * 30);
 
 
     $scope.updateLiveData = function() {
