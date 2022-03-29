@@ -3,7 +3,6 @@ html,body{
 	background-color: #f2f4da;
     color:#306a45;
   	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif; 
-
 }
 
 .chart{
@@ -15,7 +14,6 @@ html,body{
 }
 
 .unit .u,.unit .u{
-
 	display: inline;
     vertical-align: top;
 }
@@ -60,6 +58,10 @@ html,body{
 }
 .colpadding{
 	padding-left: 10px;
+}
+
+.label{
+
 }
 
 

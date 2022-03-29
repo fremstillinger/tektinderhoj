@@ -1,9 +1,13 @@
-app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$interval', '$location', '$window', '$document', function($scope, $routeParams, $route, $http, $timeout, $interval, $location, $window, $document) {
+app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', '$document', function($scope, $routeParams, $route, $http, $timeout, $location, $window, $document) {
 
-    $scope.windSpeed = 0;
-    $scope.windDirection = 0;
+    $scope.windSpeed = "--";
+    $scope.windDirection = "--";
+    $scope.temperature = "--";
 
     $scope.parametre = ['vindret', 'vind'];
+
+
+
     $scope.readingTypes = [];
 
     $http.get(configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
@@ -14,11 +18,10 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
         }
     });
 
+
     $scope.batteryLevel = 0;
 
-    
     $scope.openWebsocket = function() {
-      
 
         var connection = new WebSocket(configData.wsAdress);
 
@@ -33,21 +36,17 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
         // Log messages from the server
         connection.onmessage = function(e) {
-
-            $timeout(function() {
-                $scope.liveData = JSON.parse(e.data);
-                //alert(e.data);
-                $scope.updateLiveData();
-            }, 10);
+            $scope.liveData = JSON.parse(e.data);
+            $scope.updateLiveData();
         };
     }
 
     $scope.openWebsocket();
-    
+
 
     $scope.requestWindSpeedFromDatabase = function() {
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/2').then(function(res) {
-          
+
             if (!$scope.simulationMode) {
                 $scope.windSpeed = res.data.data.rows[0].value;
             }
@@ -79,39 +78,34 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
 
     $scope.updateLiveData = function() {
-     
-        $scope.liveDataParameters = [];
+ 
+        // $scope.liveDataParameters = [];
 
-        for (var p = 0; p < $scope.parametre.length; p++) {
-            for (var r = 0; r < $scope.readingTypes.length; r++) {
-                if ($scope.parametre[p] == $scope.readingTypes[r].shortname) {
-                    var obj = $scope.readingTypes[r];
-                    obj.value = "--";
-                    obj.readingDate = "--";
 
-                    for (var l = 0; l < $scope.liveData.length; l++) {
-                        if ($scope.readingTypes[r].readingTypeID == $scope.liveData[l].readingTypeID) {
-                            obj.value = $scope.liveData[l].value;
-                            obj.readingDate = $scope.liveData[l].readingDate;
 
-                            if ($scope.readingTypes[r].shortname == "vind") {
-                                if (!$scope.simulationMode) {
-                                    $scope.windSpeed = $scope.liveData[l].value;
-                                }
-                            }
+        for (var l = 0; l < $scope.liveData.length; l++) {
+            switch ($scope.liveData[l].readingTypeID) {
+                case 1:
+$scope.temperature = $scope.liveData[l].value;
+                break;
 
-                            if ($scope.readingTypes[r].shortname == "vindret") {
-                                $scope.windDirection = $scope.liveData[l].value;
-                                var innerArrow = document.getElementById("inner-arrow");
-                                innerArrow.setAttribute("transform", "rotate(" + $scope.windDirection + ")");
+                case 2:
+                    $scope.windSpeed = $scope.liveData[l].value;
+                    break;
 
-                            }
-                        }
-                    }
-                    $scope.liveDataParameters.push(obj);
-                }
+                case 7:
+                    $scope.windDirection = $scope.liveData[l].value;
+                
+                    document.getElementById("inner-arrow").setAttribute("transform", "rotate(" + $scope.windDirection + ")");
+                    break;
+
+                default:
+
+                    break;
+
             }
         }
+
     }
 
     $scope.windmillStage = new createjs.Stage("windmillCanvas");
@@ -259,7 +253,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     $scope.startSimulationmode = function() {
         $scope.simulationMode = true;
-        
+
         clearTimeout($scope.simulationModeTimeout);
 
         $scope.simulationModeTimeout = setTimeout(function() {
