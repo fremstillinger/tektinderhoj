@@ -45,6 +45,11 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
 
     $scope.requestWindSpeedFromDatabase = function() {
+         if($scope.simulationMode){
+            return;
+        }
+
+
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/2').then(function(res) {
 
             if (!$scope.simulationMode) {
@@ -79,8 +84,9 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
     $scope.updateLiveData = function() {
  
-        // $scope.liveDataParameters = [];
-
+        if($scope.simulationMode){
+            return;
+        }
 
 
         for (var l = 0; l < $scope.liveData.length; l++) {
@@ -163,8 +169,10 @@ $scope.temperature = $scope.liveData[l].value;
     $scope.batteryCharging = true;
     $scope.simulationMode = false;
 
+
+
     setInterval(function() {
-        var acc = 0.5;
+        var acc = 0.2;
 
         if ($scope.windSpeed > $scope.windmillRotation) {
             $scope.windmillRotation += acc;
