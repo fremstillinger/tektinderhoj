@@ -54,9 +54,6 @@ app.listen(configData.port, () => {
         (async () => {
             await open(configData.openURL.url, { app: configData.openURL.arguments });
         })();
-
-
-
     }
     console.log('We are live on ' + configData.port);
 });

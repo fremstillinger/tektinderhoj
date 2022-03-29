@@ -1,6 +1,6 @@
 app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', '$document', function($scope, $routeParams, $route, $http, $timeout, $location, $window, $document) {
 
-    $scope.windSpeed = "--";
+    $scope.windSpeed = 0;
     $scope.windDirection = "--";
     $scope.temperature = "--";
 
