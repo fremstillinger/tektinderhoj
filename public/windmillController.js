@@ -242,11 +242,15 @@ $scope.temperature = $scope.liveData[l].value;
 
 
     $scope.stopSimulationmode = function() {
+        $scope.windSpeed = "--";
         $scope.simulationMode = false;
 
     }
 
     $scope.startSimulationmode = function() {
+        if($scope.windSpeed = "--"){
+            $scope.windSpeed  = 0;
+        }
         $scope.simulationMode = true;
 
         clearTimeout($scope.simulationModeTimeout);
