@@ -1,6 +1,6 @@
 app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$timeout', '$location', '$window', '$document', function($scope, $routeParams, $route, $http, $timeout, $location, $window, $document) {
 
-    $scope.windSpeed = 0;
+    $scope.windSpeed = "--";
     $scope.windDirection = "--";
     $scope.temperature = "--";
 
@@ -182,7 +182,6 @@ $scope.temperature = $scope.liveData[l].value;
                 $scope.updateLights();
 
                 $http.get('http://localhost:8282/startRun/0/92/255/255/0/80');
-
                 $http.get('http://localhost:8282/setColor/93/499/40/20/0');
             }
         } else {
@@ -192,7 +191,6 @@ $scope.temperature = $scope.liveData[l].value;
                 $scope.batteryLevel = 0;
                 $scope.updateLights();
                 $http.get('http://localhost:8282/stopRun/0/92/255/255/0/80');
-
                 $http.get('http://localhost:8282/setColor/93/499/0/0/0');
                 $scope.batteryCharging = true;
             }
@@ -208,7 +206,6 @@ $scope.temperature = $scope.liveData[l].value;
 
         switch (e.keyCode) {
             case 82:
-
                 $scope.stopSimulationmode();
                 break;
 
@@ -231,8 +228,6 @@ $scope.temperature = $scope.liveData[l].value;
             case 73:
                 $window.location.reload();
                 break;
-
-
 
         }
     });
@@ -274,7 +269,7 @@ $scope.temperature = $scope.liveData[l].value;
     }
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-    createjs.Ticker.framerate = 12;
+    createjs.Ticker.framerate = 25;
     createjs.Ticker.on("tick", $scope.tick);
 
 }]);
