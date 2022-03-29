@@ -248,7 +248,7 @@ $scope.temperature = $scope.liveData[l].value;
     }
 
     $scope.startSimulationmode = function() {
-        if($scope.windSpeed = "--"){
+        if($scope.windSpeed == "--"){
             $scope.windSpeed  = 0;
         }
         $scope.simulationMode = true;
