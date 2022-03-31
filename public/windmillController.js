@@ -214,7 +214,7 @@ $scope.temperature = $scope.liveData[l].value;
 
         switch (e.keyCode) {
             case 82:
-                $scope.stopSimulationmode();
+                $window.location.reload();
                 break;
 
             case 65:
@@ -234,7 +234,7 @@ $scope.temperature = $scope.liveData[l].value;
                 break;
 
             case 73:
-                $window.location.reload();
+                $scope.batteryCharging = false;
                 break;
 
         }
