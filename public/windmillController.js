@@ -22,6 +22,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     $scope.batteryLevel = 0;
   
 
+
     $scope.openWebsocket = function() {
 
         var connection = new WebSocket(configData.wsAdress);
