@@ -63,7 +63,8 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
     }
 
 
-    //$scope.requestWindSpeedFromDatabase();
+    $scope.requestWindSpeedFromDatabase();
+    
     setInterval($scope.requestWindSpeedFromDatabase, 1000 * 30);
 
 

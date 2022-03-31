@@ -206,7 +206,7 @@ module.exports = function(app, dbPool) {
 				return;
 			}
 
-			var query = 'SELECT *  FROM readings WHERE readingTypeID=? ORDER BY readingDate DESC LIMIT 0,1';
+			var query = 'SELECT *  FROM readings INNER JOIN readingTypes ON readingTypes.readingTypeID = readings.readingTypeID  WHERE readings.readingTypeID=? ORDER BY readingDate DESC LIMIT 0,1';
 
 			db.query(query, [req.params.readingTypeID], function(err, rows, fields) {
 
