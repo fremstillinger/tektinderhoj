@@ -230,6 +230,7 @@ $scope.temperature = $scope.liveData[l].value;
                 break;
 
             case 73:
+                $scope.turnOnLights();
                 $scope.batteryCharging = false;
                 break;
 
