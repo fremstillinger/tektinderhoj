@@ -27,17 +27,19 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
         var connection = new WebSocket(configData.wsAdress);
 
         connection.onopen = function() {
+            console.log("websocket connected");
             $scope.livedataConnected = true;
         };
 
 
         connection.onerror = function(error) {
+             console.log('WebSocket Error ' + error);
             $scope.livedataConnected = false;
             connection.close();
-            console.log('WebSocket Error ' + error);
+           
         };
 
-        connection.onClose = function(){
+        connection.onclose = function(){
             console.log("websocket closed, connecting in 5 sec")
             setTimeout($scope.openWebsocket,5000);
         }
@@ -297,6 +299,6 @@ $scope.temperature = $scope.liveData[l].value;
 
      $scope.openWebsocket();
        
-       
+
 
 }]);
