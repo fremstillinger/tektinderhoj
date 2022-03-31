@@ -187,19 +187,15 @@ $scope.temperature = $scope.liveData[l].value;
             if ($scope.batteryLevel >= 1) {
                 $scope.batteryLevel = 1;
                 $scope.batteryCharging = false;
-                $scope.updateLights();
-
-                $http.get('http://localhost:8282/startRun/0/92/255/255/0/80');
-                $http.get('http://localhost:8282/setColor/93/499/40/20/0');
+                $scope.turnOnLights();
             }
         } else {
             $scope.batteryLevel -= 0.01;
 
             if ($scope.batteryLevel <= 0) {
                 $scope.batteryLevel = 0;
-                $scope.updateLights();
-                $http.get('http://localhost:8282/stopRun/0/92/255/255/0/80');
-                $http.get('http://localhost:8282/setColor/93/499/0/0/0');
+               
+                $scope.turnOffLights();
                 $scope.batteryCharging = true;
             }
         }
@@ -268,8 +264,15 @@ $scope.temperature = $scope.liveData[l].value;
         }, 30000);
     }
 
-    $scope.updateLights = function() {
+    $scope.turnOnLights = function() {
+        $http.get('http://localhost:8282/startRun/0/92/255/255/0/80');
+        $http.get('http://localhost:8282/setColor/93/499/40/20/0');
 
+    }
+
+    $scope.turnOffLights = function() {
+        $http.get('http://localhost:8282/stopAllRuns');
+        $http.get('http://localhost:8282/setColor/93/499/0/0/0');
 
     }
     $scope.tick = function() {
@@ -283,5 +286,7 @@ $scope.temperature = $scope.liveData[l].value;
     createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
     createjs.Ticker.framerate = 25;
     createjs.Ticker.on("tick", $scope.tick);
+
+    $scope.turnOffLights();
 
 }]);
