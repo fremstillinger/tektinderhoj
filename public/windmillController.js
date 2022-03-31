@@ -266,12 +266,7 @@ $scope.temperature = $scope.liveData[l].value;
     }
 
     $scope.turnOnLights = function() {
-        $http.get('http://localhost:8282/startRun/0/20/255/255/0/80');
-         $http.get('http://localhost:8282/startRun/21/40/255/255/0/80');
-          $http.get('http://localhost:8282/startRun/41/60/255/255/0/80');
-           $http.get('http://localhost:8282/startRun/61/80/255/255/0/80');
-            $http.get('http://localhost:8282/startRun/81/92/255/255/0/80');
-
+        $http.get('http://localhost:8282/startRun/0/92/255/255/0/120');
         $http.get('http://localhost:8282/setColor/93/499/40/20/0');
 
     }
