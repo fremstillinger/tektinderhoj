@@ -20,6 +20,7 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
 
 
     $scope.batteryLevel = 0;
+  
 
     $scope.openWebsocket = function() {
 
@@ -29,19 +30,18 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
             $scope.livedataConnected = true;
         };
 
-        // Log errors
+    
+
         connection.onerror = function(error) {
+            $scope.livedataConnected = false;
             console.log('WebSocket Error ' + error);
         };
 
-        // Log messages from the server
         connection.onmessage = function(e) {
             $scope.liveData = JSON.parse(e.data);
             $scope.updateLiveData();
         };
     }
-
-    $scope.openWebsocket();
 
 
     $scope.requestWindSpeedFromDatabase = function() {
@@ -49,8 +49,11 @@ app.controller('windmillCtrl', ['$scope', '$routeParams', '$route', '$http', '$t
             return;
         }
 
-
         $http.get(configData.apiAdress + '/api/get/latestReadingByReadingTypeID/2').then(function(res) {
+
+            if($scope.livedataConnected){
+                $scope.openWebsocket();
+            }
 
             if (!$scope.simulationMode) {
                 $scope.windSpeed = res.data.data.rows[0].value;
@@ -268,7 +271,6 @@ $scope.temperature = $scope.liveData[l].value;
     $scope.turnOnLights = function() {
         $http.get('http://localhost:8282/startRun/0/92/255/255/0/120');
         $http.get('http://localhost:8282/setColor/93/499/40/20/0');
-
     }
 
     $scope.turnOffLights = function() {
