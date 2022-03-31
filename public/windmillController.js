@@ -273,7 +273,7 @@ $scope.temperature = $scope.liveData[l].value;
 
     $scope.turnOffLights = function() {
         $http.get('http://localhost:8282/stopAllRuns');
-        $http.get('http://localhost:8282/setColor/93/499/0/0/0');
+        $http.get('http://localhost:8282/setColor/0/499/0/0/0');
 
     }
     $scope.tick = function() {
