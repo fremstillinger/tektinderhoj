@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 var request = require('request');
 var configData = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 
-var saveData = true;
+
 var ws = null;
 var isWebsocketOpen = false;
 
@@ -64,7 +64,7 @@ console.log(error);
 }
 
 
-exports.logData = function(readingTypeID, sourceID, value) {
+exports.logData = function(readingTypeID, sourceID, value,saveData) {
 
 	var jsonData = {
 		"readingDate": new Date(),
@@ -93,10 +93,4 @@ exports.logData = function(readingTypeID, sourceID, value) {
 
 			});
 	}
-}
-
-setInterval(toogleSaveData, configData.logInterval * 1000);
-
-function toogleSaveData() {
-	saveData = true;
 }
