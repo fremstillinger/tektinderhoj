@@ -59,7 +59,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 
 	$scope.openWebsocket = function() {
-
+		console.log("open websocket...", configData.wsAdress);
+		
 		var connection = new WebSocket(configData.wsAdress);
 
 		connection.onopen = function() {

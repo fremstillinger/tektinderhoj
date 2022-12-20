@@ -56,7 +56,9 @@ var checkInterval = 10;
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
 	console.log("time since last data dump",secondsSinceLastDataDump);
-	requestReading();
+	if(secondsSinceLastDataDump > checkInterval*1000){
+		requestReading();
+	}
 }, 10000);
 
 
