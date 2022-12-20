@@ -10,23 +10,23 @@ var isWebsocketOpen = false;
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
-function openWecsocket() {
-	var wsPath = 'wss://' + configData.apiadress + ':' + configData.websocketPort;
+function openWebsocket() {
+	var wsPath = configData.websocketAdress;
 	try {
-console.log("websocket connected");
 		ws = new WebSocket(wsPath,{ rejectUnauthorized: false});
 	} catch (e) {
 		console.log(e, wsPath);
 	}
 
 	ws.on('open', function() {
+
 		isWebsocketOpen = true;
 	});
 
 	ws.on('error', function(e) {
 
 		console.log("websocket error", wsPath)
-		
+		ws.close();
 		isWebsocketOpen = true;
 	});
 
@@ -39,12 +39,12 @@ console.log("websocket connected");
 }
 
 
-openWecsocket();
+openWebsocket();
 
 
 exports.getReadingTypes = function(callback) {
 	var url = "https://" + configData.apiadress + "/api/get/readingTypes/";
-	console.log(url);
+
 	request(url, function(error, response, body) {
 		if (error != null) {
 console.log(error);

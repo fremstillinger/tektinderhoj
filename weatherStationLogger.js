@@ -56,11 +56,8 @@ var checkInterval = 10;
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
 	console.log("time since last data dump",secondsSinceLastDataDump);
-	
-	
-		requestReading();
-	
-}, 5000);
+	requestReading();
+}, 10000);
 
 
 function requestReading() {
@@ -122,5 +119,4 @@ console.log("data does not begin with 06");
 		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
 	}
-
 })
