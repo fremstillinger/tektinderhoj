@@ -50,12 +50,8 @@ function openPort() {
 	});
 }
 
-
-
 var timeAtLastDataDump = new Date();
-var timeWhenDataWasLastSaved = new Date();
-
-var checkInterval = 5;
+var checkInterval = 10;
 
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
@@ -122,16 +118,17 @@ console.log("data does not begin with 06");
 		console.log(readingTypes[i].readingTypeName,value);
 
 
-		var secondsSinceDataWasLastSaved =  (new Date().getTime()-timeWhenDataWasLastSaved.getTime())/1000;
-		console.log(secondsSinceDataWasLastSaved);
-		
-		var saveData = secondsSinceDataWasLastSaved > configData.logInterval;
 
-		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value, saveData);
-
-		if(saveData){
-			timeWhenDataWasLastSaved = new Date();
-		}
+		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
 
 	}
 })
+
+
+
+setInterval(toogleSaveData, configData.logInterval * 1000);
+
+function toogleSaveData() {
+	saveData = true;
+}
+

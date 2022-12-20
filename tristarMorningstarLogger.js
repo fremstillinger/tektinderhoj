@@ -25,9 +25,6 @@ client.setID(1);
 var v_scale = 96.667 * 2 ** (-15);
 var ampScale = 66.667 * 2 ** (-15);
 
-var timeWhenDataWasLastSaved = new Date();
-
-
 function doReading() {
   
     client.readHoldingRegisters(0, 50, function(err, data) {
@@ -41,14 +38,8 @@ function doReading() {
                     var value = data.data[readingIndex];
                   
                     eval(rt.readingConversion);
-
-                    var secondsSinceDataWasLastSaved =  (new Date().getTime()-timeWhenDataWasLastSaved.getTime())/1000;
-                    var saveData = secondsSinceDataWasLastSaved > configData.logInterval;
                     
-                    apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value,saveData);
-                    if(saveData){
-                       timeWhenDataWasLastSaved = new Date();
-                    }
+                    apiCalls.logData(rt.readingTypeID, configData.tristartDeviceID, value);
                 }
             }
 
