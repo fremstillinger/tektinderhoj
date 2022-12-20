@@ -124,7 +124,7 @@ console.log("data does not begin with 06");
 
 		var secondsSinceDataWasLastSaved =  (new Date().getTime()-timeWhenDataWasLastSaved.getTime())/1000;
 		
-		var saveData = secondsSinceLastDataDump > configData.logInterval;
+		var saveData = secondsSinceDataWasLastSaved > configData.logInterval;
 
 		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, saveData);
 
