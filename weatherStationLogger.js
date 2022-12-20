@@ -51,13 +51,12 @@ function openPort() {
 }
 
 var timeAtLastDataDump = new Date();
-var logInterval = configData.logInterval;
-
+var checkInterval = 10;
 
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
 	console.log("seconds since last data dump",secondsSinceLastDataDump);
-	if(secondsSinceLastDataDump > logInterval){
+	if(secondsSinceLastDataDump > checkInterval){
 		requestReading();
 	}
 }, 1000);
