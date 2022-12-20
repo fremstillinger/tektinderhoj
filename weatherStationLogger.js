@@ -53,13 +53,14 @@ function openPort() {
 var timeAtLastDataDump = new Date();
 var checkInterval = 10;
 
+
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
 	console.log("seconds since last data dump",secondsSinceLastDataDump);
 	if(secondsSinceLastDataDump > checkInterval){
 		requestReading();
 	}
-}, 10000);
+}, 1000);
 
 
 function requestReading() {
