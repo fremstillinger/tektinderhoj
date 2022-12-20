@@ -55,7 +55,7 @@ function openPort() {
 var timeAtLastDataDump = new Date();
 var timeWhenDataWasLastSaved = new Date();
 
-var checkInterval = 10;
+var checkInterval = 5;
 
 setInterval(function() {
 	var secondsSinceLastDataDump =  (new Date().getTime()-timeAtLastDataDump.getTime())/1000;
@@ -123,6 +123,7 @@ console.log("data does not begin with 06");
 
 
 		var secondsSinceDataWasLastSaved =  (new Date().getTime()-timeWhenDataWasLastSaved.getTime())/1000;
+		console.log(secondsSinceDataWasLastSaved);
 		
 		var saveData = secondsSinceDataWasLastSaved > configData.logInterval;
 
