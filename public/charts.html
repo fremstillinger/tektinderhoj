@@ -4,7 +4,7 @@
 
 		
 		<div class="col-md-3 unit" ng-repeat="liveParam in liveDataParameters">
-		<p  ng-bind="liveParam.readingTypeName"></p>
+		<p ng-bind="liveParam.readingTypeName"></p>
 		<h2 class="u" ng-bind="liveParam.value"></h2><p class="u" ng-bind="liveParam.unit"></p>
         </div>
 
@@ -52,6 +52,7 @@
 <div class="row">
 
 <div class="col-md-12" ng-repeat="chart in charts">
+	<h3 ng-if="chart.isLoading">Henter data... ({{chart.name}})</h3>
 	<center><h4 class="chart">{{chart.series[0]}}</h4></center>
 	<div style="height: 400px">
 		<canvas class="chart chart-line" chart-data="chart.data"

@@ -2,6 +2,7 @@ html,body{
 	
 	background-color: #f2f4da;
     color:#306a45;
+  	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif; 
 }
 
 .chart{
@@ -57,6 +58,10 @@ html,body{
 }
 .colpadding{
 	padding-left: 10px;
+}
+
+.label{
+
 }
 
 

@@ -22,6 +22,15 @@ app.config(function($routeProvider) {
 			controller: "chartCtrl",
 			reloadOnSearch: false
 		})
+		.when("/omforhal", {
+			templateUrl: "aboutWindmill.html",
+		
+		})
+		.when("/vindmolle", {
+			templateUrl: "windmill.html",
+			controller: "windmillCtrl",
+			reloadOnSearch: false
+	})
 });
 
 
@@ -51,7 +60,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.openWebsocket = function() {
 
-		var connection = new WebSocket('ws://' + configData.wsAdress);
+		var connection = new WebSocket(configData.wsAdress);
 
 		connection.onopen = function() {
 			$scope.livedataConnected = true;
@@ -73,6 +82,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	}
 
 	$scope.updateLiveData = function() {
+			console.log("update live data");
 		$scope.liveDataParameters = [];
 
 		for (var p = 0; p < $scope.parametre.length; p++) {
@@ -97,7 +107,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 
 	$scope.test = $routeParams;
 	$scope.openWebsocket();
-	$scope.parametre = ['volt','vind','temp','uv', 'fugt'];
+
+	$scope.parametre = ['volt','vind','temp','uv', 'fugt','regn'];
 
 	if ($routeParams.parametre != undefined) {
 		$scope.parametre = $routeParams.parametre.split(",");
@@ -147,11 +158,11 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			endDate: $scope.endDate.toISOString()
 		});
 
-		var url = 'http://' + configData.apiAdress + '/api/downloadDataset/?' + p;
+		var url = configData.apiAdress + '/api/downloadDataset/?' + p;
 		$window.open(url, '_blank');
 	}
 
-	$http.get('http://' + configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
+	$http.get(configData.apiAdress + '/api/get/readingTypes/').then(function(res) {
 		for (var i = 0; i < res.data.data.length; i++) {
 			var obj = res.data.data[i];
 			obj.selected = $scope.parametre.indexOf(obj.shortname) != -1;
@@ -163,6 +174,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 	$scope.chartController = function(name) {
 		var self = this;
 		this.name = name;
+
+		this.isLoading = true;
 
 		this.colors = [{
 			//backgroundColor:"#330",
@@ -187,7 +200,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		this.labels = [];
 
 
-		$http.get('http://' + configData.apiAdress + '/api/get/readings/' + self.name, {
+		$http.get(configData.apiAdress + '/api/get/readings/' + self.name, {
 				params: {
 					startDate: $scope.startDate.toISOString(),
 					endDate: $scope.endDate.toISOString()
@@ -195,6 +208,8 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 			})
 			.then(function(res) {
 				$timeout(function() {
+					
+
 					var readingTypeName = "";
 					for (var i = 0; i < res.data.data.rows.length; i++) {
 						//var d = new Date(res.data.data[i].readingDate);
@@ -204,6 +219,7 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 					}
 
 					self.series = [readingTypeName];
+					self.isLoading = false;
 
 					self.options = {
 						maintainAspectRatio: false,
@@ -239,12 +255,21 @@ app.controller('chartCtrl', ['$scope', '$routeParams', '$route', '$http', '$time
 		$scope.reloadChartdata();
 	}
 
+	$scope.reloadTimeout;
+
 	$scope.reloadChartdata = function() {
-		$scope.updateEmbedcode();
+		clearTimeout($scope.reloadTimeout);
+
+		$scope.reloadTimeout = setTimeout(function(){
+			$scope.updateEmbedcode();
 		$scope.charts = [];
 		angular.forEach($scope.parametre, function(value, key) {
 			$scope.charts.push(new $scope.chartController(value));
 		});
+
+		},100)
+		
 	}
+
 	$scope.reloadChartdata();
 }]);
