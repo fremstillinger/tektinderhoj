@@ -126,7 +126,7 @@ console.log("data does not begin with 06");
 		
 		var saveData = secondsSinceDataWasLastSaved > configData.logInterval;
 
-		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, saveData);
+		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value, saveData);
 
 		if(saveData){
 			timeWhenDataWasLastSaved = new Date();
