@@ -115,11 +115,15 @@ console.log("data does not begin with 06");
 	
 		eval(readingTypes[i].readingConversion);
 
-		console.log(readingTypes[i].readingTypeName,value);
+		console.log(readingTypes[i].readingTypeName,value,readingTypes[i].maxValue);
+		
 
-
-
-		apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
+		if(value<readingTypes[i].maxValue){
+			apiCalls.logData(readingTypes[i].readingTypeID, configData.weatherStationSourceID, value);
+		}
+		else{
+			console.log("reading is wrong");
+		}
 
 	}
 })
